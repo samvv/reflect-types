@@ -1,0 +1,29 @@
+{
+  "name": "reflect-types",
+  "version": "2.0.0",
+  "description": "Type combinators for JavaScript/TypeScript at runtime",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samvv/reflect-types.git"
+  },
+  "keywords": [
+    "type",
+    "validation",
+    "schema",
+    "specification",
+    "runtime"
+  ],
+  "author": "Sam Vervaeck",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samvv/reflect-types/issues"
+  },
+  "homepage": "https://github.com/samvv/reflect-types#readme",
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}
