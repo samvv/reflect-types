@@ -93,3 +93,7 @@ export function applyMixins(derivedCtor: any, constructors: any[]) {
     });
   });
 }
+
+export function assertNever(_value: never): never {
+  throw new Error(`Code that should have been unreachable was executed. See the stack trace for more information.`);
+}
