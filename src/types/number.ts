@@ -10,7 +10,7 @@ export class NumberType implements TypeBase {
 
   readonly kind = 'number';
 
-  /** @ignore */ __type!: number;
+  __type!: number;
 
   category?: NumberCategory;
 

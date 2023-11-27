@@ -94,8 +94,7 @@ export class RGBType implements TypeBase {
     readonly kind = 'rgb';
 
     // This resolves to the actual type of the values that are held by this type.
-    // The @ignore makes sure that this field doesn't show up in code completions.
-    /** @ignore */ __type!: RGB;
+    __type!: RGB;
 
 }
 

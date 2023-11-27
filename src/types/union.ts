@@ -4,7 +4,7 @@ export class UnionType<Ts extends TypeBase[] = TypeBase[]> implements TypeBase {
 
   readonly kind = 'union';
 
-  /** @ignore */ __type!: Ts[number]['__type'];
+  __type!: Ts[number]['__type'];
 
   constructor(
     public types: Ts

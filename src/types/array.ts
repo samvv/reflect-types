@@ -5,7 +5,7 @@ export class ArrayType<T extends TypeBase = TypeBase> implements TypeBase {
 
   readonly kind = 'array';
 
-  /** @ignore */ __type!: T['__type'][];
+  __type!: T['__type'][];
 
   constructor(
     public elementType: T,

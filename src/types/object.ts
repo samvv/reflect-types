@@ -29,7 +29,7 @@ export class ObjectType<T extends Record<string, TypeBase> = Record<string, Type
 
   readonly kind = 'object';
 
-  /** @ignore */ __type!: { [K in keyof T]: T[K]['__type'] };
+  __type!: { [K in keyof T]: T[K]['__type'] };
 
   constructor(
     public entries: T,

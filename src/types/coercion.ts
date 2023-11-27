@@ -4,7 +4,7 @@ export class CoercionType<T extends TypeBase = TypeBase, R extends TypeBase = Ty
 
   readonly kind = 'coercion';
 
-  /** @ignore */ __type!: R['__type'];
+  __type!: R['__type'];
 
   constructor(
     public source: T,

@@ -7,7 +7,7 @@ export class StringType implements TypeBase {
 
   readonly kind = 'string';
 
-  /** @ignore */ __type!: string;
+  __type!: string;
 
   encoding?: string;
   regex?: RegExp;

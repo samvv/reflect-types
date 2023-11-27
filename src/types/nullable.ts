@@ -6,7 +6,7 @@ export class NullableType<T extends TypeBase = TypeBase> implements TypeBase {
 
   readonly kind = 'nullable';
 
-  /** @ignore */ __type!: T['__type'] | null;
+  __type!: T['__type'] | null;
 
   constructor(
     public type: T,

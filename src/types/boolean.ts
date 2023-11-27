@@ -3,7 +3,7 @@ import { applyMixins } from "../util";
 
 export class BooleanType implements TypeBase {
   readonly kind = 'boolean';
-  /** @ignore */ __type!: boolean;
+  __type!: boolean;
 }
 
 export interface BooleanType extends Equatable<BooleanType> {}

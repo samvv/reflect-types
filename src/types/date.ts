@@ -5,7 +5,7 @@ export class DateType implements TypeBase {
 
   readonly kind = 'date';
 
-  /** @ignore */ __type!: Date;
+  __type!: Date;
 
   day?: number;
   month?: number;

@@ -5,7 +5,7 @@ export class TupleType<Ts extends TypeBase[] = TypeBase[]> implements TypeBase {
 
   readonly kind = 'tuple';
 
-  /** @ignore */ __type!: { [K in keyof Ts]: Ts[K]['__type'] };
+  __type!: { [K in keyof Ts]: Ts[K]['__type'] };
 
   constructor(
     public types: Ts,

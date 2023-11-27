@@ -7,7 +7,7 @@ export class LiteralType<T extends LiteralValue = LiteralValue> implements TypeB
 
   readonly kind = 'literal';
 
-  /** @ignore */ __type!: T;
+  __type!: T;
 
   constructor(
     public value: T
