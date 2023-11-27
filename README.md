@@ -74,8 +74,50 @@ Just install `reflect-types` using your favorite package manager, e.g.:
 npm install reflect-types
 ```
 
-## API
+## Reference
+
+### Extending the type system
+
+The type system is flexible enough to be extended with user-defined types.
+
+Here is a code snippet that create a new type for RGB-colors.
+
+```ts
+import { TypeBase } from "reflect-types"
+
+type RGB = [r: number, g: number, b: number];
+
+export class RGBType implements TypeBase {
+
+    // Give your type an unique name. Names should be lowercase and use dashes
+    // when consisting of multiple words.
+    readonly kind = 'rgb';
+
+    // This resolves to the actual type of the values that are held by this type.
+    // The @ignore makes sure that this field doesn't show up in code completions.
+    /** @ignore */ __type!: RGB;
+
+}
+
+declare module "reflect-types" {
+    interface Types { 
+        rgb: RGBType,
+    }
+}
+
+export function rgb(): RGBType {
+    return new RGBType();
+}
+```
+
+In the code above, we first define a TypeScript type for the values we wish to support, in this case `RGB`.
+Next, we create the actual class that will represent these values in `reflect-types`. Usually these have the suffix `Type`.
+They implement `TypeBase`, a minimal interface that every type should adhere to.
+The fields `kind` and `__type` indicate the tag and the TypeScript type, respectively.
+Next, the `declare module`-directive ensures that when a user specifies our new type somewhere, it is actually accepted by e.g. `types.object()`.
+Finally, we create a simple constructor for our type, making the class transparent and avoiding the use of `new`.
 
 ## License
 
 This project is licensed under the MIT license. See `LICENSE.txt` for more information.
+
