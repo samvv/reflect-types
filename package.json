@@ -24,6 +24,16 @@
   },
   "homepage": "https://github.com/samvv/reflect-types#readme",
   "devDependencies": {
+    "@ava/typescript": "^4.1.0",
+    "ava": "^5.3.1",
     "typescript": "^5.3.2"
+  },
+  "ava": {
+    "typescript": {
+      "rewritePaths": {
+        "src/": "lib/"
+      },
+      "compile": false
+    }
   }
 }
