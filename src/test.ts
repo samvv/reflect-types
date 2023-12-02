@@ -1,5 +1,7 @@
 
-import { ValueOf, types } from "."
+import test from "ava"
+
+import { ValueOf, coreValidators, isValid, types, validate } from "."
 
 // type IfEquals<T, U, Y=unknown, N=never> =
 //   (<G>() => G extends T ? 1 : 2) extends
@@ -14,20 +16,47 @@ const assert = <A, B extends A, C extends B>() => {}
 //   dateOfBirth: types.date(),
 // });
 
-const foo = types.object({
-  bax: types.string(),
-  bar: types.array(types.object({
-    left: types.number(),
-    right: types.array(
-      types.string(),
-    ),
-  })),
-  bal: types.date(),
+test('correctly detects booleans', t => {
+  const scheme = types.boolean();
+  t.true(isValid(false, scheme, coreValidators));
+  t.true(isValid(true, scheme, coreValidators));
+  t.false(isValid(12, scheme, coreValidators));
+  t.false(isValid('foo', scheme, coreValidators));
+  t.false(isValid([ 1, 2, 3 ], scheme, coreValidators));
 });
 
-type Foo = ValueOf<typeof foo>;
+test('works on some nested structure', t => {
 
-assert<Foo, { bar: { left: number, right: string[] }[], bax: string, bal: Date }, Foo>();
+  const fooScheme = types.object({
+    bax: types.string(),
+    bar: types.array(types.object({
+      left: types.number(),
+      right: types.array(
+        types.string(),
+      ),
+    })),
+    bal: types.date(),
+  });
 
-let x!: ValueOf<typeof foo>;
+  type Foo = ValueOf<typeof fooScheme>;
 
+  assert<Foo, { bar: { left: number, right: string[] }[], bax: string, bal: Date }, Foo>();
+
+  let x: ValueOf<typeof fooScheme> = {
+    bax: 'foo',
+    bar: [
+      {
+        // @ts-expect-error
+        left: 'true',
+        right: [ 'a', 'b', 'c' ]
+      }
+    ],
+    bal: new Date()
+  }
+
+  const errors = [...validate(x, fooScheme, coreValidators)];
+
+  t.assert(errors.length === 1);
+  t.deepEqual(errors[0].path, [ 'bar', 0, 'left' ]);
+
+});

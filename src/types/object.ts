@@ -1,5 +1,6 @@
 
-import { Equatable, Type, TypeBase } from "../common";
+import { Equatable, Path, RecurseFn, Type, TypeBase, ValidationError } from "../common";
+import { hasOwnProperty, isPlainObject } from "../util";
 
 export class OptionalType<T extends TypeBase = TypeBase> implements TypeBase {
 
@@ -61,3 +62,39 @@ export function object<T extends TypeObj>(obj: T): ObjectType<T> {
   return new ObjectType(obj);
 }
 
+export function* validateObject(value: any, path: Path, type: ObjectType, recurse: RecurseFn) {
+
+  if (!isPlainObject(value)) {
+    yield new ValidationError(path, `value must be an object`);
+    return;
+  }
+
+  const out = {} as Record<string, any>;
+
+  if (type.entries !== undefined) {
+    for (const [key, childType] of Object.entries(type.entries)) {
+      const childPath = [...path, key];
+      if (!hasOwnProperty(value, key)) {
+        if (childType.kind !== 'optional') {
+          yield new ValidationError(childPath, `property does not exist`);
+        }
+      } else {
+        out[key] = yield* recurse(
+          value[key]
+          , childPath
+          , (childType.kind === 'optional'
+            ? (childType as OptionalType).type
+            : childType) as Type
+        );
+      }
+    }
+  }
+
+  for (const [key, _child] of Object.entries(value)) {
+    if (!hasOwnProperty(type.entries, key)) {
+      yield new ValidationError([...path, key], `property '${key}' must not exist on value`);
+    }
+  }
+
+  return out;
+}

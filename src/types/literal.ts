@@ -1,5 +1,5 @@
 
-import { Equatable, TypeBase } from "../common";
+import { Equatable, Path, Type, TypeBase } from "../common";
 
 export type LiteralValue = boolean | number | string;
 
@@ -29,3 +29,10 @@ export function literal<T extends LiteralValue>(value: T) {
   return new LiteralType(value);
 }
 
+export function* validateLiteral(value: any, path: Path, type: LiteralType) {
+  if (value !== type.value) {
+    yield new Error(`value must exactly be ${type.value}`);
+    return;
+  }
+  return value;
+}

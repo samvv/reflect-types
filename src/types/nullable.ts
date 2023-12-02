@@ -1,5 +1,5 @@
 
-import { TypeBase, Equatable, Defaultable, Type } from "../common"
+import { TypeBase, Equatable, Defaultable, Type, Path, RecurseFn } from "../common"
 import { applyMixins } from "../util";
 
 export class NullableType<T extends TypeBase = TypeBase> implements TypeBase {
@@ -29,3 +29,11 @@ declare module "../common" {
 export function nullable<T extends Type>(type: T): NullableType<T> {
   return new NullableType<T>(type);
 }
+
+export function* validateNullable(value: any, path: Path, type: NullableType, recurse: RecurseFn) {
+  if (value === null) {
+    return null;
+  }
+  return yield* recurse(value, path, type.type as Type);
+}
+
