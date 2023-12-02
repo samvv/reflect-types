@@ -93,7 +93,7 @@ export class RGBType implements TypeBase {
     // when consisting of multiple words.
     readonly kind = 'rgb';
 
-    // This resolves to the actual type of the values that are held by this type.
+    // This resolves to the actual TypeScript type of value that is held by this type.
     __type!: RGB;
 
 }
