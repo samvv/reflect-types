@@ -18,4 +18,5 @@ export const coreValidators = {
   string: types.validateString as ValidateFn,
   tuple: types.validateTuple as ValidateFn,
   union: types.validateUnion as ValidateFn,
+  unknown: types.validateUnknown as ValidateFn,
 } as Record<string, ValidateFn>;
