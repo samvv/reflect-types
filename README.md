@@ -1,15 +1,15 @@
 Reflect Types
 =============
 
-Reflect types provides a method to generate types that can be checked both at compile time and at runtime. 
+Reflect types allows you to work with types both at compile time and at runtime. 
 
-Think [Zod][zod], but with the useful feature of being able to analyse and traverse the types.
+Think [Zod][zod], but with the useful feature of being able to analyse and traverse the types, not just use it for validation.
 
 [zod]: https://www.npmjs.com/package/zod
 
 ⚠️ This library is still under development. Things might not work or might not work as advertised. You have been warned!
 
-**Defining an object type and validation some data with it**
+**Defining an object type and validate some data with it**
 ```ts
 import { validate, types } from "reflect-type"
 
@@ -39,7 +39,7 @@ if (errors.length > 0) {
 // Yay! Now, `result` may e.g. be stored in the database.
 ```
 
-**Inspecting a type in order to inefer whether it is nullable**
+**Inspecting a type in order to infer whether it is nullable**
 ```ts
 import { Type, types } from "reflect-types"
 
