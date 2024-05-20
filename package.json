@@ -6,6 +6,7 @@
   "scripts": {
     "test": "ava"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/samvv/reflect-types.git"
