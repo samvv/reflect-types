@@ -13,7 +13,7 @@ Think [Zod][zod], but with the useful feature of being able to analyse and trave
 ```ts
 import { types } from "reflect-types"
 
-function buildEquality<T>(t: Type): boolean {
+function buildEquality(t: Type): boolean {
     switch (t.kind) {
         case 'string':
             return (a,b) => a === b;
@@ -23,9 +23,13 @@ function buildEquality<T>(t: Type): boolean {
     }
 }
 
-function assoc<K, V>(data: Array<[K,V]>, key: K, k: Type) {
+function assoc<K, V>(data: Array<[K,V]>, key: K, k: Type): V | undefined {
     const eq = buildEquality(k);
-    // ...
+    for (const [otherKey, otherValue] of data) {
+        if (eq(key, otherKey)) {
+            return otherValue;
+        }
+    }
 }
 
 const data = [
