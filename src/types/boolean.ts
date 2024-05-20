@@ -1,4 +1,4 @@
-import { Equatable, Path, TypeBase, ValidationError } from "../common.js";
+import { Equatable, PropertyPath, TypeBase, ValidationError } from "../common.js";
 import { applyMixins } from "../util.js";
 
 export class BooleanType implements TypeBase {

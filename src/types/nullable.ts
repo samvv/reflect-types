@@ -1,5 +1,4 @@
-
-import { TypeBase, Equatable, Defaultable, Type, Path, RecurseFn } from "../common.js"
+import { TypeBase, Equatable, Defaultable, Type } from "../common.js"
 import { applyMixins } from "../util.js";
 
 export class NullableType<T extends TypeBase = TypeBase> implements TypeBase {

@@ -1,4 +1,4 @@
-import { Equatable, Path, Sequenced, TypeBase, ValidationError } from "../common.js";
+import { Equatable, Sequenced, TypeBase } from "../common.js";
 import { applyMixins } from "../util.js";
 
 export type Encoding = 'ascii' | 'utf-8' | 'utf-16';

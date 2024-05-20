@@ -1,4 +1,4 @@
-import { Path, RecurseFn, Type, ValidationError, registerValidator } from "./common.js";
+import { PropertyPath, RecurseFn, Type, ValidationError, registerValidator } from "./common.js";
 import { hasOwnProperty, isPlainObject } from "./util.js";
 
 import type { ArrayType } from "./types/array.js";
@@ -15,7 +15,7 @@ import type { UnionType } from "./types/union.js";
 import type { UnknownType } from "./types/unknown.js";
 import type { UUID4Type } from "./types/uuid4.js";
 
-export function* validateArray(value: any, path: Path, type: ArrayType, recurse: RecurseFn) {
+export function* validateArray(value: any, path: PropertyPath, type: ArrayType, recurse: RecurseFn) {
   if (!Array.isArray(value)) {
     yield new ValidationError(path.slice(), `value must be an array`);
     return;
@@ -38,7 +38,7 @@ export function* validateArray(value: any, path: Path, type: ArrayType, recurse:
 }
 
 
-export function* validateBoolean(value: any, path: Path, type: BooleanType) {
+export function* validateBoolean(value: any, path: PropertyPath, type: BooleanType) {
   if (typeof value !== 'boolean') {
     yield new ValidationError(path, `value must be of type boolean`);
     return;
@@ -50,11 +50,11 @@ export function* validateBoolean(value: any, path: Path, type: BooleanType) {
 }
 
 
-export function validateCoercion(value: any, path: Path, type: CoercionType, recurse: RecurseFn) {
+export function validateCoercion(value: any, path: PropertyPath, type: CoercionType, recurse: RecurseFn) {
   return recurse(value, path, type.source as Type);
 }
 
-export function* validateDate(value: any, path: Path, type: DateType) {
+export function* validateDate(value: any, path: PropertyPath, type: DateType) {
   if (!(value instanceof Date)) {
     yield new ValidationError(path, `value must be a Date object`);
     return;
@@ -73,7 +73,7 @@ export function* validateDate(value: any, path: Path, type: DateType) {
 
 registerValidator('date', validateDate);
 
-export function* validateLiteral(value: any, path: Path, type: LiteralType) {
+export function* validateLiteral(value: any, path: PropertyPath, type: LiteralType) {
   if (value !== type.value) {
     yield new ValidationError(path, `value must exactly be ${type.value}`);
     return;
@@ -82,7 +82,7 @@ export function* validateLiteral(value: any, path: Path, type: LiteralType) {
 }
 
 
-export function* validateNullable(value: any, path: Path, type: NullableType, recurse: RecurseFn) {
+export function* validateNullable(value: any, path: PropertyPath, type: NullableType, recurse: RecurseFn) {
   if (value === null) {
     return null;
   }
@@ -90,7 +90,7 @@ export function* validateNullable(value: any, path: Path, type: NullableType, re
 }
 
 
-export function* validateNumber(value: any, path: Path, type: NumberType) {
+export function* validateNumber(value: any, path: PropertyPath, type: NumberType) {
   if (typeof value !== 'number') {
     yield new ValidationError(path, `value must be of type number`);
     return;
@@ -110,7 +110,7 @@ export function* validateNumber(value: any, path: Path, type: NumberType) {
   return value;
 }
 
-export function* validateObject(value: any, path: Path, type: ObjectType, recurse: RecurseFn) {
+export function* validateObject(value: any, path: PropertyPath, type: ObjectType, recurse: RecurseFn) {
 
   if (!isPlainObject(value)) {
     yield new ValidationError(path, `value must be an object`);
@@ -155,7 +155,7 @@ export function* validateObject(value: any, path: Path, type: ObjectType, recurs
   return out;
 }
 
-export function* validateString(value: any, path: Path, type: StringType) {
+export function* validateString(value: any, path: PropertyPath, type: StringType) {
   if (typeof value !== 'string') {
     yield new ValidationError(path, `value must be of type string`);
     return;
@@ -182,7 +182,7 @@ export function* validateString(value: any, path: Path, type: StringType) {
   return value;
 }
 
-export function* validateTuple(value: any, path: Path, type: TupleType, recurse: RecurseFn) {
+export function* validateTuple(value: any, path: PropertyPath, type: TupleType, recurse: RecurseFn) {
   if (!Array.isArray(value)) {
     yield new ValidationError(path, `value must be an array`);
     return;
@@ -201,7 +201,7 @@ export function* validateTuple(value: any, path: Path, type: TupleType, recurse:
   return out;
 }
 
-export function* validateUnion(value: any, path: Path, type: UnionType, recurse: RecurseFn) {
+export function* validateUnion(value: any, path: PropertyPath, type: UnionType, recurse: RecurseFn) {
   const errors = [];
   for (const innerType of type.types) {
     const k = errors.length;
@@ -222,13 +222,13 @@ export function* validateUnion(value: any, path: Path, type: UnionType, recurse:
   yield new ValidationError(path, `no union member matched`, errors);
 }
 
-export function* validateUnknown(value: any, path: Path, type: UnknownType, recurse: RecurseFn) {
+export function* validateUnknown(value: any, path: PropertyPath, type: UnknownType, recurse: RecurseFn) {
   return value;
 }
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export function* validateUUID4(value: any, path: Path, type: UUID4Type, recurse: RecurseFn) {
+export function* validateUUID4(value: any, path: PropertyPath, type: UUID4Type, recurse: RecurseFn) {
   if (!UUID_REGEX.test(value)) {
     yield new ValidationError(path, `invalid pattern for UUID 4`);
     return;

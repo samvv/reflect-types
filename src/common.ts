@@ -78,12 +78,12 @@ type TypeTag = keyof Types
 
 export type Type = Types[keyof Types];
 
-export type Path = Array<string | number>;
+export type PropertyPath = Array<string | number>;
 
 export class ValidationError extends Error {
 
   public constructor(
-    public path: Path,
+    public path: PropertyPath,
     public rawMessage: string,
     public errors?: ValidationError[],
   ) {
@@ -92,9 +92,9 @@ export class ValidationError extends Error {
 
 }
 
-export type RecurseFn = (value: any, path: Path, type: Type) => Generator<ValidationError, any>;
+export type RecurseFn = (value: any, path: PropertyPath, type: Type) => Generator<ValidationError, any>;
 
-export type ValidateFn<T extends Type = Type> = (value: any, path: Path, type: T, recurse: RecurseFn) => Generator<ValidationError, any>;
+export type ValidateFn<T extends Type = Type> = (value: any, path: PropertyPath, type: T, recurse: RecurseFn) => Generator<ValidationError, any>;
 
 export type Validators = Record<string, ValidateFn>;
 
@@ -118,7 +118,7 @@ export interface ValidateOptions {
 
 export function lazyValidate<T extends Type>(value: any, type: T, { validators = defaultValidators }: ValidateOptions = {}): Generator<ValidationError, ValueOf<T>> {
 
-  function* visit(value: any, path: Path, type: Type) {
+  function* visit(value: any, path: PropertyPath, type: Type) {
     const validator = validators[type.kind];
     if (validator === undefined) {
       throw new Error(`A validator for type '${type.kind}' is not defined.`);

@@ -1,4 +1,4 @@
-import { Equatable, Ordered, Path, TypeBase, ValidationError } from "../common.js";
+import { Equatable, Ordered, TypeBase } from "../common.js";
 import { applyMixins } from "../util.js";
 
 export class DateType implements TypeBase {
