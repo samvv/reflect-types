@@ -3,7 +3,7 @@ Reflect Types
 
 Reflect types allows you to work with types both at compile time and at runtime. 
 
-Think [Zod][zod], but with the useful feature of being able to analyse and traverse the types, not just use it for validation.
+Think [Zod][zod], but with the useful feature of being able to analyse and traverse the types, not just use them for validation.
 
 [zod]: https://www.npmjs.com/package/zod
 
