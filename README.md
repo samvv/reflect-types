@@ -9,9 +9,41 @@ Think [Zod][zod], but with the useful feature of being able to analyse and trave
 
 ⚠️ This library is still under development. Things might not work or might not work as advertised. You have been warned!
 
-**Defining an object type and validate some data with it**
+**Make generic functions truly generic with type information**
 ```ts
-import { validate, types } from "reflect-type"
+import { types } from "reflect-types"
+
+function buildEquality<T>(t: Type): boolean {
+    switch (t.kind) {
+        case 'string':
+            return (a,b) => a === b;
+        case 'vec2':
+            return (a,b) => a[0] === b[0] && a[1] === b[1];
+        // and so on ...
+    }
+}
+
+function assoc<K, V>(data: Array<[K,V]>, key: K, k: Type) {
+    const eq = buildEquality(k);
+    // ...
+}
+
+const data = [
+    [1, 'one'],
+    [5, 'five'],
+    [3, 'three'],
+    [6, 'six'],
+];
+
+const elementType = types.vec2();
+
+assoc(data, 1, elementType); // returns 'one'
+```
+
+**Define an object type and validate some data with it**
+```ts
+import { types } from "reflect-types"
+import { validate } from "reflect-type/lib/validators.js"
 
 const personType = types.object({
   id: types.uuid4(),
@@ -39,22 +71,23 @@ if (errors.length > 0) {
 // Yay! Now, `result` may e.g. be stored in the database.
 ```
 
-**Inspecting a type in order to infer whether it is nullable**
+**Inspect a type in order to infer whether it is nullable**
 ```ts
 import { Type, types } from "reflect-types"
 
 function isNullable(type: Type): boolean {
     switch (type.kind) {
-        case 'Null':
-        case 'Nullable':
+        case 'literal':
+            return type.value === null;
+        case 'nullable':
             return true;
-        case 'Optional':
+        case 'optional':
             return isNullable(type.type);
-        case 'Object':
-        case 'Array':
-        case 'String':
-        case 'Boolean':
-        case 'Number':
+        case 'object':
+        case 'array':
+        case 'string':
+        case 'boolean':
+        case 'number':
             return false;
         default:
             assertNever(type);
@@ -63,7 +96,10 @@ function isNullable(type: Type): boolean {
 
 const type = fetchSomeTypeSomehow();
 
-console.log(isNullable(type) ? `The type is nullable.` : `The type is not nullable.`);
+console.log(
+  isNullable(type)
+    ? `The type is nullable.`
+    : `The type is not nullable.`);
 ```
 
 ## Installation
