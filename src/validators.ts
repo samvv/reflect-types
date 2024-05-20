@@ -1,4 +1,4 @@
-import { PropertyPath, RecurseFn, Type, ValidationError, registerValidator } from "./common.js";
+import { PropertyPath, Type, TypeTag, ValueOf } from "./common.js";
 import { hasOwnProperty, isPlainObject } from "./util.js";
 
 import type { ArrayType } from "./types/array.js";
@@ -15,6 +15,79 @@ import type { UnionType } from "./types/union.js";
 import type { UnknownType } from "./types/unknown.js";
 import type { UUID4Type } from "./types/uuid4.js";
 
+export class ValidationError extends Error {
+
+  public constructor(
+    public path: PropertyPath,
+    public rawMessage: string,
+    public errors?: ValidationError[],
+  ) {
+    super(`${path.join('.')}: ${rawMessage}`);
+  }
+
+}
+
+export type RecurseFn = (value: any, path: PropertyPath, type: Type) => Generator<ValidationError, any>;
+
+export type ValidateFn<T extends Type = Type> = (value: any, path: PropertyPath, type: T, recurse: RecurseFn) => Generator<ValidationError, any>;
+
+export type Validators = Record<string, ValidateFn>;
+
+const defaultValidators: Record<string, ValidateFn> = Object.create(null);
+
+export function registerValidator<K extends TypeTag>(name: K, callback: ValidateFn<Type & { kind: K }>): void {
+  const existing = defaultValidators[name];
+  if (existing !== undefined) {
+    throw new Error(
+      existing === callback
+        ? `Same validator registered twice.`
+        : `There is already a validator registered with the name '${name}'.`
+    );
+  }
+  defaultValidators[name] = callback as ValidateFn;
+}
+
+export interface ValidateOptions {
+  validators?: Validators;
+}
+
+export function lazyValidate<T extends Type>(
+  value: any,
+  type: T,
+  { validators = defaultValidators }: ValidateOptions = {}
+): Generator<ValidationError, ValueOf<T>> {
+
+  function* visit(value: any, path: PropertyPath, type: Type) {
+    const validator = validators[type.kind];
+    if (validator === undefined) {
+      throw new Error(`A validator for type '${type.kind}' is not defined.`);
+    }
+    return yield* validator(value, path, type, visit);
+  }
+
+  return visit(value, [], type);
+}
+
+export function validate<T extends Type>(
+  value: any,
+  type: T,
+  opts: ValidateOptions = {}
+): [ValidationError[], ValueOf<T>] {
+  const errors = [];
+  const iter = lazyValidate(value, type, opts);
+  for (;;) {
+    const { done, value } = iter.next();
+    if (done) {
+      return [errors, value];
+    }
+    errors.push(value);
+  }
+}
+
+export function isValid(value: any, type: Type, opts: ValidateOptions = {}): boolean {
+  const iter = lazyValidate(value, type, opts);
+  return !!iter.next().done;
+}
 export function* validateArray(value: any, path: PropertyPath, type: ArrayType, recurse: RecurseFn) {
   if (!Array.isArray(value)) {
     yield new ValidationError(path.slice(), `value must be an array`);
@@ -235,7 +308,6 @@ export function* validateUUID4(value: any, path: PropertyPath, type: UUID4Type, 
   }
   return value.toLowerCase();
 }
-
 
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
