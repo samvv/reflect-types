@@ -1,4 +1,4 @@
-import { Path, RecurseFn, Type, TypeBase } from "../common";
+import { Path, RecurseFn, Type, TypeBase } from "../common.js";
 
 export class CoercionType<T extends TypeBase = TypeBase, R extends TypeBase = TypeBase> implements TypeBase {
 
@@ -15,7 +15,7 @@ export class CoercionType<T extends TypeBase = TypeBase, R extends TypeBase = Ty
 
 }
 
-declare module '../common' {
+declare module '../common.js' {
   export interface Types {
     coercion: CoercionType;
   }
@@ -25,6 +25,3 @@ export function coerce<T extends Type, R extends Type>(source: T, target: R): Co
   return new CoercionType(source, target);
 }
 
-export function validateCoercion(value: any, path: Path, type: CoercionType, recurse: RecurseFn) {
-  return recurse(value, path, type.source as Type);
-}

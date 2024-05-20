@@ -1,12 +1,13 @@
 
-export { assertNever, applyMixins } from "./util"
+export { assertNever, applyMixins } from "./util.js"
 
-import { ValidateFn } from "./common";
-import * as types from "./types"
+import { ValidateFn, isValid, validate } from "./common.js";
+
+export * from "./common.js"
+
+import * as types from "./types/index.js"
 
 export { types };
-
-export * from "./common"
 
 export const coreValidators = {
   array: types.validateArray as ValidateFn,

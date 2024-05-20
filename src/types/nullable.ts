@@ -1,6 +1,6 @@
 
-import { TypeBase, Equatable, Defaultable, Type, Path, RecurseFn } from "../common"
-import { applyMixins } from "../util";
+import { TypeBase, Equatable, Defaultable, Type, Path, RecurseFn } from "../common.js"
+import { applyMixins } from "../util.js";
 
 export class NullableType<T extends TypeBase = TypeBase> implements TypeBase {
 
@@ -20,7 +20,7 @@ export interface NullableType<T extends TypeBase> extends Equatable<NullableType
 
 applyMixins(NullableType, [Equatable, Defaultable]);
 
-declare module "../common" {
+declare module "../common.js" {
   export interface Types {
     nullable: NullableType,
   }
@@ -28,12 +28,5 @@ declare module "../common" {
 
 export function nullable<T extends Type>(type: T): NullableType<T> {
   return new NullableType<T>(type);
-}
-
-export function* validateNullable(value: any, path: Path, type: NullableType, recurse: RecurseFn) {
-  if (value === null) {
-    return null;
-  }
-  return yield* recurse(value, path, type.type as Type);
 }
 

@@ -7,14 +7,10 @@ export class UnknownType {
 
 }
 
-declare module '../common' {
+declare module '../common.js' {
   interface Types {
     unknown: UnknownType;
   }
-}
-
-export function* validateUnknown(value: any) {
-  return value;
 }
 
 export function unknown(): UnknownType {

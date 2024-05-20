@@ -98,10 +98,10 @@ export type ValidateFn<T extends Type = Type> = (value: any, path: Path, type: T
 
 export type Validators = Record<string, ValidateFn>;
 
-const validators: Record<string, ValidateFn> = Object.create(null);
+const defaultValidators: Record<string, ValidateFn> = Object.create(null);
 
 export function registerValidator<K extends TypeTag>(name: K, callback: ValidateFn<Type & { kind: K }>): void {
-  const existing = validators[name];
+  const existing = defaultValidators[name];
   if (existing !== undefined) {
     throw new Error(
       existing === callback
@@ -109,10 +109,15 @@ export function registerValidator<K extends TypeTag>(name: K, callback: Validate
         : `There is already a validator registered with the name '${name}'.`
     );
   }
-  validators[name] = callback as ValidateFn;
+  defaultValidators[name] = callback as ValidateFn;
 }
 
-export function validate<T extends Type>(value: any, type: T, validators: Validators): Generator<ValidationError, ValueOf<T>> {
+export interface ValidateOptions {
+  validators?: Validators;
+}
+
+export function lazyValidate<T extends Type>(value: any, type: T, { validators = defaultValidators }: ValidateOptions = {}): Generator<ValidationError, ValueOf<T>> {
+
   function* visit(value: any, path: Path, type: Type) {
     const validator = validators[type.kind];
     if (validator === undefined) {
@@ -120,10 +125,23 @@ export function validate<T extends Type>(value: any, type: T, validators: Valida
     }
     return yield* validator(value, path, type, visit);
   }
+
   return visit(value, [], type);
 }
 
-export function isValid(value: any, type: Type, validators: Validators): boolean {
-  const iter = validate(value, type, validators);
+export function validate<T extends Type>(value: any, type: T, opts: ValidateOptions = {}): [ValidationError[], ValueOf<T>] {
+  const errors = [];
+  const iter = lazyValidate(value, type, opts);
+  for (;;) {
+    const { done, value } = iter.next();
+    if (done) {
+      return [errors, value];
+    }
+    errors.push(value);
+  }
+}
+
+export function isValid(value: any, type: Type, opts: ValidateOptions = {}): boolean {
+  const iter = lazyValidate(value, type, opts);
   return !!iter.next().done;
 }

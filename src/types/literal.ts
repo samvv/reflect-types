@@ -1,5 +1,5 @@
 
-import { Equatable, Path, Type, TypeBase } from "../common";
+import { Equatable, TypeBase } from "../common.js";
 
 export type LiteralValue = boolean | number | string;
 
@@ -19,7 +19,7 @@ export class LiteralType<T extends LiteralValue = LiteralValue> implements TypeB
 
 export interface LiteralType<T> extends Equatable<LiteralType<T>> {}
 
-declare module '../common' {
+declare module '../common.js' {
   export interface Types {
     literal: LiteralType,
   }
@@ -27,12 +27,4 @@ declare module '../common' {
 
 export function literal<T extends LiteralValue>(value: T) {
   return new LiteralType(value);
-}
-
-export function* validateLiteral(value: any, path: Path, type: LiteralType) {
-  if (value !== type.value) {
-    yield new Error(`value must exactly be ${type.value}`);
-    return;
-  }
-  return value;
 }
