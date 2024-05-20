@@ -1,4 +1,4 @@
-import { PropertyPath, RecurseFn, Type, TypeBase } from "../common.js";
+import { Type, TypeBase } from "../common.js";
 
 export class CoercionType<T extends TypeBase = TypeBase, R extends TypeBase = TypeBase> implements TypeBase {
 

@@ -1,9 +1,9 @@
 
 import test from "ava"
 
-import { ValueOf, isValid, types, validate } from "./index.js"
+import { ValueOf, types } from "./index.js"
 
-import "./validators.js"
+import { validate, isValid } from "./validators.js"
 
 // type IfEquals<T, U, Y=unknown, N=never> =
 //   (<G>() => G extends T ? 1 : 2) extends

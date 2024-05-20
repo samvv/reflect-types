@@ -1,6 +1,5 @@
 
-import { Equatable, PropertyPath, RecurseFn, Type, TypeBase, ValidationError } from "../common.js";
-import { hasOwnProperty, isPlainObject } from "../util.js";
+import { Equatable, Type, TypeBase } from "../common.js";
 
 export class OptionalType<T extends TypeBase = TypeBase> implements TypeBase {
 
