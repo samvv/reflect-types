@@ -16,6 +16,37 @@ Why would I want to use this?
 
 ## Examples
 
+**Define an object type and validate some data with it**
+```ts
+import { types } from "reflect-types"
+import { validate } from "reflect-type/lib/validators.js"
+
+const personType = types.object({
+  id: types.uuid4(),
+  fullName: types.string(),
+  email: types.email(),
+  dateOfBirth: types.date(),
+});
+
+const person1 = {
+    id: '22ba434a-c662-4cc9-8a05-5cf1c7c90fd7',
+    fullName: 'James Smith',
+    email: 'james.smith@gmail.com',
+    dateOfBirth: new Date('8/23/1997'),
+}
+
+const [errors, result] = validate(person1, personType);
+
+if (errors.length > 0) {
+    for (const error of errors) {
+        console.log(error);
+    }
+    return;
+}
+
+// Yay! Now, `result` may e.g. be stored in the database.
+```
+
 **Make generic functions truly generic with type information**
 ```ts
 import { Type } from "reflect-types"
@@ -55,37 +86,6 @@ const data = [
 const elementType = types.vec2();
 
 assoc(data, 1, elementType); // returns 'one'
-```
-
-**Define an object type and validate some data with it**
-```ts
-import { types } from "reflect-types"
-import { validate } from "reflect-type/lib/validators.js"
-
-const personType = types.object({
-  id: types.uuid4(),
-  fullName: types.string(),
-  email: types.email(),
-  dateOfBirth: types.date(),
-});
-
-const person1 = {
-    id: '22ba434a-c662-4cc9-8a05-5cf1c7c90fd7',
-    fullName: 'James Smith',
-    email: 'james.smith@gmail.com',
-    dateOfBirth: new Date('8/23/1997'),
-}
-
-const [errors, result] = validate(person1, personType);
-
-if (errors.length > 0) {
-    for (const error of errors) {
-        console.log(error);
-    }
-    return;
-}
-
-// Yay! Now, `result` may e.g. be stored in the database.
 ```
 
 **Inspect a type in order to infer whether it is nullable**
