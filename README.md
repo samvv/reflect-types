@@ -9,9 +9,11 @@ Think [Zod][zod], but with the useful feature of being able to analyse and trave
 
 ⚠️ This library is still under development. Things might not work or might not work as advertised. You have been warned!
 
+## Examples
+
 **Make generic functions truly generic with type information**
 ```ts
-import { types } from "reflect-types"
+import { Type } from "reflect-types"
 
 function buildEquality(t: Type): boolean {
     switch (t.kind) {
@@ -22,11 +24,17 @@ function buildEquality(t: Type): boolean {
         // and so on ...
     }
 }
+```
 
-function assoc<K, V>(data: Array<[K,V]>, key: K, k: Type): V | undefined {
-    const eq = buildEquality(k);
+**Build genneric algorithms using these functions**
+
+```ts
+import { Type, ValueOf } from "reflect-types"
+
+function getValue<K extends Type, V>(data: Array<[K,V]>, key: ValueOf<T>, keyType: K): V | undefined {
+    const equal = buildEquality(keyType);
     for (const [otherKey, otherValue] of data) {
-        if (eq(key, otherKey)) {
+        if (equal(key, otherKey)) {
             return otherValue;
         }
     }
@@ -76,6 +84,7 @@ if (errors.length > 0) {
 ```
 
 **Inspect a type in order to infer whether it is nullable**
+
 ```ts
 import { Type, types } from "reflect-types"
 
@@ -139,7 +148,7 @@ export class RGBType implements TypeBase {
 }
 
 declare module "reflect-types" {
-    interface Types { 
+    interface Types {
         rgb: RGBType,
     }
 }
