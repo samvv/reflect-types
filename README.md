@@ -7,7 +7,12 @@ Think [Zod][zod], but with the useful feature of being able to analyse and trave
 
 [zod]: https://www.npmjs.com/package/zod
 
-⚠️ This library is still under development. Things might not work or might not work as advertised. You have been warned!
+Why would I want to use this?
+
+ - You want to declare and validate some JavaScript objects at the same time
+ - You want to do some metaprogramming like in C++
+ - You want to extend the system with your own types easily and safely
+ - You want your users to specify types of data and be able to inspect what they return
 
 ## Examples
 
