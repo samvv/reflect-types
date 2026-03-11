@@ -93,3 +93,10 @@ test('first example in README works', t => {
   t.pass();
 
 });
+
+const x = types.tuple([
+  types.number(),
+  types.string(),
+]);
+
+assert<ValueOf<typeof x>, [number, string], ValueOf<typeof x>>();

@@ -1,7 +1,7 @@
 import { Equatable, Type, TypeBase } from "../common.js";
 import { applyMixins } from "../util.js";
 
-export class TupleType<Ts extends TypeBase[] = TypeBase[]> implements TypeBase {
+export class TupleType<Ts extends ReadonlyArray<TypeBase> = TypeBase[]> implements TypeBase {
 
   readonly kind = 'tuple';
 
@@ -24,6 +24,6 @@ declare module '../common.js' {
   }
 }
 
-export function tuple<Ts extends Type[]>(types: Ts): TupleType<Ts> {
+export function tuple<Ts extends ReadonlyArray<Type>>(types: [...Ts]): TupleType<Ts> {
   return new TupleType(types);
 }
