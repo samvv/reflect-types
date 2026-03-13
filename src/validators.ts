@@ -23,7 +23,12 @@ export class ValidationError extends Error {
     public rawMessage: string,
     public errors?: ValidationError[],
   ) {
-    super(`${path.join('.')}: ${rawMessage}`);
+    let msg = '';
+    if (path.length > 0) {
+      msg += `${path.join('.')}: `;
+    }
+    msg += rawMessage;
+    super(msg);
   }
 
 }
