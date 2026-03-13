@@ -14,6 +14,7 @@ import type { TupleType } from "./types/tuple.js";
 import type { UnionType } from "./types/union.js";
 import type { UnknownType } from "./types/unknown.js";
 import type { UUID4Type } from "./types/uuid4.js";
+import type { UndefinedType } from "./types/undefined.js";
 
 export class ValidationError extends Error {
 
@@ -88,6 +89,7 @@ export function isValid(value: any, type: Type, opts: ValidateOptions = {}): boo
   const iter = lazyValidate(value, type, opts);
   return !!iter.next().done;
 }
+
 export function* validateArray(value: any, path: PropertyPath, type: ArrayType, recurse: RecurseFn) {
   if (!Array.isArray(value)) {
     yield new ValidationError(path.slice(), `value must be an array`);
@@ -274,6 +276,12 @@ export function* validateTuple(value: any, path: PropertyPath, type: TupleType, 
   return out;
 }
 
+export function* validateUndefined(value: any, path: PropertyPath, _type: UndefinedType, _recurse: RecurseFn) {
+  if (value !== undefined) {
+    yield new ValidationError(path, `value must be undefined`);
+  }
+}
+
 export function* validateUnion(value: any, path: PropertyPath, type: UnionType, recurse: RecurseFn) {
   const errors = [];
   for (const innerType of type.types) {
@@ -317,6 +325,7 @@ registerValidator('number', validateNumber);
 registerValidator('object', validateObject);
 registerValidator('string', validateString);
 registerValidator('tuple', validateTuple);
+registerValidator('undefined', validateUndefined);
 registerValidator('union', validateUnion);
 registerValidator('unknown', validateUnknown);
 registerValidator('uuid4', validateUUID4);
