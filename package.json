@@ -1,6 +1,6 @@
 {
   "name": "reflect-types",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Type combinators for JavaScript/TypeScript at runtime",
   "main": "lib/index.js",
   "scripts": {
