@@ -4,6 +4,7 @@
   "description": "Type combinators for JavaScript/TypeScript at runtime",
   "main": "lib/index.js",
   "scripts": {
+    "prepare": "tsc",
     "test": "ava"
   },
   "type": "module",
