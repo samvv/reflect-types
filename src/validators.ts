@@ -11,7 +11,7 @@ import { type NumberType, NumberCategory } from "./types/number.js";
 import type { ObjectType, OptionalType } from "./types/object.js";
 import type { StringType } from "./types/string.js";
 import type { TupleType } from "./types/tuple.js";
-import type { UUID4Type } from "./types/uuid4.js";
+import type { UUID4Type } from "./types/uuid.js";
 import type { UndefinedType } from "./types/undefined.js";
 import type { UnionType } from "./types/union.js";
 import type { UnknownType } from "./types/unknown.js";
