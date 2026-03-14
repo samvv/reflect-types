@@ -1,6 +1,5 @@
 
-import type { ValueOf, UUID, UUID4 } from "./index.js"
-import * as types from "./index.js";
+import { types, type ValueOf, type UUID, type UUID4 } from "./index.js"
 
 type Equal<T, U> =
   (<G>() => G extends T ? 1 : 2) extends 

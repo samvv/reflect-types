@@ -1,7 +1,6 @@
 import test from "ava";
 
-import { validate, isValid, type ValueOf } from "./index.js"
-import * as types from "./index.js";
+import { validate, isValid, type ValueOf, types } from "./index.js"
 
 test('correctly validates a boolean type', t => {
   const scheme = types.boolean();
