@@ -10,7 +10,7 @@ export class CallableType<
   __type!: (...args: { [I in keyof Ps]: ValueOf<Ps[I]> }) => ValueOf<R>;
 
   constructor(
-    public paramsTypes: Ps,
+    public paramTypes: Ps,
     public returnType: R,
   ) {
 
