@@ -100,3 +100,12 @@ const x = types.tuple([
 ]);
 
 assert<ValueOf<typeof x>, [number, string], ValueOf<typeof x>>();
+
+test('callable works', () => {
+  const f = types.callable(
+    [ types.number(), types.string() ] as const,
+    types.boolean(),
+  );
+  const k: ValueOf<typeof f> = (_a: number, _b: string) => true;
+  k
+});
