@@ -1,4 +1,5 @@
 import { Type, TypeBase } from "../common.js";
+import { null_ } from "./null.js";
 
 export class UnionType<Ts extends TypeBase[] = TypeBase[]> implements TypeBase {
 
@@ -22,5 +23,9 @@ declare module '../common.js' {
 
 export function union<Ts extends Type[]>(types: Ts): UnionType<Ts> {
   return new UnionType(types);
+}
+
+export function nullable<T extends Type>(type: T) {
+  return union([ type, null_() ]);
 }
 

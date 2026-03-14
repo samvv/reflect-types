@@ -1,4 +1,4 @@
-import { Equatable, TypeBase } from "../common.js";
+import { Equatable, type TypeBase } from "../common.js";
 import { applyMixins } from "../util.js";
 
 export class NullType implements TypeBase {
@@ -19,3 +19,4 @@ declare module '../common.js' {
 export function null_(): NullType {
   return new NullType();
 }
+
