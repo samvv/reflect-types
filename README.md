@@ -22,10 +22,10 @@ import { types } from "reflect-types"
 import { validate } from "reflect-type/lib/validators.js"
 
 const personType = types.object({
-  id: types.uuid4(),
-  fullName: types.string(),
-  email: types.email(),
-  dateOfBirth: types.date(),
+    id: types.uuid4(),
+    fullName: types.string(),
+    email: types.email(),
+    dateOfBirth: types.date(),
 });
 
 const person1 = {
@@ -128,7 +128,184 @@ Just install `reflect-types` using your favorite package manager, e.g.:
 npm install reflect-types
 ```
 
-## Reference
+## API Reference
+
+This examples in this section require the following import to be present:
+
+```ts
+import { types as t } from "refect-types";
+```
+
+### `ValueOf<T>`
+
+Infer the value of a certain reflected type.
+
+Use the `typeof` keyword to lift the reflected type to the TypeScript type
+level.
+
+**Example:**
+
+```ts
+import { ValueOf, types as t } from "reflect-types";
+
+const objT = t.object({
+    foo: t.number(),
+    bar: t.string(),
+});
+
+type Obj = ValueOf<typeof objT>;
+
+const fo = {
+    foo: 1,
+    bar: "hello",
+} satisfies Obj;
+```
+
+### `t.undefined()`
+
+Represents the TypeScript `undefined` type.
+
+### `t.null_()`
+
+Represents the TypeScript `null` type.
+
+Notice the trailing `_` to avoid conflict with JavaScript's built-in `null` keyword.
+
+### `t.boolean()`
+
+Represents the TypeScript `boolean` type.
+
+### `t.number()`
+
+Represents the TypeScript `number` type.
+
+### `t.string()`
+
+Represents the TypeScript `string` type.
+
+### `t.literal(value)`
+
+Represents a TypeScript literal type.
+
+**Examples:**
+
+```ts
+import { ValueOf, types as t } from "reflect-types";
+
+const x1: ValueOf<typeof t.literal(true)> = true; // ok
+const x2: ValueOf<typeof t.literal(true)> = false; // type error
+const x3: ValueOf<typeof t.literal("foobar")> = "foobar"; // ok
+const x4: ValueOf<typeof t.literal("foobar")> = "blablabla"; // type error
+const x5: ValueOf<typeof t.literal(42)> = 42; // ok
+const x6: ValueOf<typeof t.literal(42)> = 3; // type error
+```
+
+### `t.date()`
+
+> [!WARNING]
+>
+> This constructor is experimental and might change in the future.
+
+Represents a plain date with year, month, day components.
+
+This is not to be confused with a JavaScript date object.
+
+### `t.nullable(inner)`
+
+Represents a union of the type of `inner` and a null literal type.
+
+```ts
+import { types as t } from "reflect-types";
+
+const maybeStringT = t.nullable(t.string());
+```
+
+### `t.array(elementType)`
+
+Represents a TypeScript `Array<T>` where `T` is the inferred type of
+`elementType`.
+
+```ts
+import { types as t } from "reflect-types";
+
+const numbersT = t.array(t.number());
+
+const personsT = t.array(t.object({
+    fullName: t.string(),
+    dateOfBirth: t.date(),
+    email: t.email(),
+});
+```
+
+### `t.object(objLiteral)`
+
+Represents an object literal at the type level, where the keys and values are
+specified in `objLiteral`.
+
+```ts
+import { types as t } from "reflect-types";
+
+const loginT = t.object({
+    username: t.string(),
+    password: t.string(),
+    rememberMe: t.boolean(),
+});
+```
+
+### `t.optional(inner)`
+
+> [!WARNING]
+>
+> This constructor must only be used inside `t.object()`.
+
+Marks a field of the object being defined as optional.
+
+`inner` is a reflected type that represents the type of the field.
+
+```ts
+import { types as t } from "reflect-types";
+
+const productT = t.object({
+    title: t.string(),
+    description: t.optonal(t.string()),
+    price: t.boolean(),
+});
+```
+
+### `t.union(elementTypes)`
+
+Represents a TypeScript union type.
+
+`elementTypes` must be an array of reflected types, like so:
+
+```ts
+import { types as t } from "reflect-types";
+
+const stringOrNumberT = t.union([
+    t.string(),
+    t.number(),
+]);
+```
+
+### `t.callable(params, returns)`
+
+Represents a function signature.
+
+Note that due to a limitation in TypeScript you need to add `as const` to the
+parameter type array, like so:
+
+```ts
+import { types as t } from "reflect-types";
+
+const stringLengthSig = t.callable(
+    [ t.string() ] as const,
+    t.number()
+);
+
+const getLength: ValueOf<typeof stringLengthSig> = x => x.length;
+```
+
+## Guides
 
 ### Extending the type system
 
