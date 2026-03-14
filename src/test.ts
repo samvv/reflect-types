@@ -108,4 +108,13 @@ test('callable works', () => {
   );
   const k: ValueOf<typeof f> = (_a: number, _b: string) => true;
   k
+  // @ts-expect-error
+  const l: ValueOf<typeof f> = (_a: number, _b: string) => 1;
+  l
+  // @ts-expect-error
+  const m: ValueOf<typeof f> = (_a: number, _b: number) => true;
+  m
+  // @ts-expect-error
+  const n: ValueOf<typeof f> = (_a: number, _b: string, _c: number) => true;
+  n
 });
