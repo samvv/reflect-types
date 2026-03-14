@@ -13,5 +13,5 @@ export * from "./tuple.js"
 export * from "./union.js"
 export * from "./undefined.js"
 export * from "./unknown.js"
-export * from "./uuid4.js"
+export * from "./uuid.js"
 
