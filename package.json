@@ -27,7 +27,9 @@
   "homepage": "https://github.com/samvv/reflect-types#readme",
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
+    "@types/node": "^25.5.0",
     "ava": "^7.0.0",
+    "marked": "^17.0.4",
     "typescript": "^5.9.3"
   },
   "ava": {
