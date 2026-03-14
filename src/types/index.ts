@@ -1,5 +1,6 @@
 export * from "./array.js"
 export * from "./boolean.js"
+export * from "./callable.js"
 export * from "./coercion.js"
 export * from "./date.js"
 export * from "./literal.js"
