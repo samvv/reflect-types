@@ -6,15 +6,15 @@ import type { BooleanType } from "./types/boolean.js";
 import type { CoercionType } from "./types/coercion.js";
 import type { DateType } from "./types/date.js";
 import type { LiteralType } from "./types/literal.js";
-import type { NullableType } from "./types/nullable.js";
-import { NumberCategory, type NumberType } from "./types/number.js";
+import type { NullType } from "./types/null.js";
+import { type NumberType, NumberCategory } from "./types/number.js";
 import type { ObjectType, OptionalType } from "./types/object.js";
 import type { StringType } from "./types/string.js";
 import type { TupleType } from "./types/tuple.js";
-import type { UnionType } from "./types/union.js";
-import type { UnknownType } from "./types/unknown.js";
 import type { UUID4Type } from "./types/uuid4.js";
 import type { UndefinedType } from "./types/undefined.js";
+import type { UnionType } from "./types/union.js";
+import type { UnknownType } from "./types/unknown.js";
 
 export class ValidationError extends Error {
 
@@ -162,11 +162,11 @@ export function* validateLiteral(value: any, path: PropertyPath, type: LiteralTy
 }
 
 
-export function* validateNullable(value: any, path: PropertyPath, type: NullableType, recurse: RecurseFn) {
-  if (value === null) {
-    return null;
+export function* validateNull(value: any, path: PropertyPath, _type: NullType, _recurse: RecurseFn) {
+  if (value !== null) {
+    yield new ValidationError(path, `value must be null`);
+    return;
   }
-  return yield* recurse(value, path, type.type as Type);
 }
 
 
@@ -325,7 +325,7 @@ export function* validateUUID4(value: any, path: PropertyPath, type: UUID4Type, 
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
 registerValidator('literal', validateLiteral);
-registerValidator('nullable', validateNullable);
+registerValidator('null', validateNull);
 registerValidator('number', validateNumber);
 registerValidator('object', validateObject);
 registerValidator('string', validateString);
