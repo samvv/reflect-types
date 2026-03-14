@@ -272,7 +272,7 @@ const stringLengthSig = t.callable(
 const getLength: Infer<typeof stringLengthSig> = x => x.length;
 ```
 
-## Guides
+## Advanced Usage
 
 ### Extending the type system
 
@@ -308,11 +308,18 @@ export function rgb(): RGBType {
 ```
 
 In the code above, we first define a TypeScript type for the values we wish to support, in this case `RGB`.
-Next, we create the actual class that will represent these values in `reflect-types`. Usually these have the suffix `Type`.
-They implement `TypeBase`, a minimal interface that every type should adhere to.
-The fields `kind` and `__type` indicate the tag and the TypeScript type, respectively.
-Next, the `declare module`-directive ensures that when a user specifies our new type somewhere, it is actually accepted by e.g. `types.object()`.
-Finally, we create a simple constructor for our type, making the class transparent and avoiding the use of `new`.
+
+Next, we create the actual class that will represent these values in
+`reflect-types`. Usually these have the suffix `Type`. They implement
+`TypeBase`, a minimal interface that every type should adhere to.
+
+The fields `kind` and `__type` indicate the tag and the TypeScript type,
+respectively. Next, the `declare module`-directive ensures that when a user
+specifies our new type somewhere, it is actually accepted by e.g.
+`types.object()`.
+
+Finally, we create a simple constructor for our type, making the class
+transparent and avoiding the use of `new`.
 
 ## License
 
