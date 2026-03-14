@@ -1,0 +1,8 @@
+{
+  "name": "reflect-types-examples",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "reflect-types": "file:.."
+  }
+}
