@@ -18,7 +18,7 @@ Why would I want to use this?
 
 **Define an object type and validate some data with it**
 ```ts
-import { types as t, validate } from "reflect-types"
+import { type ValueOf, types as t, validate } from "reflect-types"
 
 const personT = t.object({
     id: t.uuid4(),
@@ -27,7 +27,9 @@ const personT = t.object({
     dateOfBirth: t.date(),
 });
 
-const person1 = {
+type Person = ValueOf<typeof personT>;
+
+const person1: Person = {
     id: '22ba434a-c662-4cc9-8a05-5cf1c7c90fd7',
     fullName: 'James Smith',
     email: 'james.smith@gmail.com',
