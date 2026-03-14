@@ -97,8 +97,10 @@ function isNullable(type: Type): boolean {
     switch (type.kind) {
         case 'literal':
             return type.value === null;
-        case 'nullable':
+        case 'null':
             return true;
+        case 'union':
+            return type.types.some(isNullable);
         case 'optional':
             return isNullable(type.type);
         case 'object':
