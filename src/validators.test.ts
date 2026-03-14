@@ -1,6 +1,6 @@
 import test from "ava";
 
-import { validate, isValid, type ValueOf, types } from "./index.js"
+import { validate, isValid, type Infer, types } from "./index.js"
 
 test('correctly validates a boolean type', t => {
   const scheme = types.boolean();
@@ -38,7 +38,7 @@ test('validate works on some nested structure', t => {
     bal: types.date(),
   });
 
-  let valid: ValueOf<typeof fooT> = {
+  let valid: Infer<typeof fooT> = {
     bax: 'foo',
     bar: [
       {
@@ -53,7 +53,7 @@ test('validate works on some nested structure', t => {
   t.assert(errors1.length === 0);
   t.deepEqual(result1, valid);
 
-  let invalid: ValueOf<typeof fooT> = {
+  let invalid: Infer<typeof fooT> = {
     bax: 'foo',
     bar: [
       {

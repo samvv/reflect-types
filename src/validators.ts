@@ -1,4 +1,4 @@
-import { PropertyPath, Type, TypeTag, ValueOf } from "./common.js";
+import { PropertyPath, Type, TypeTag, Infer } from "./common.js";
 import { hasOwnProperty, isPlainObject } from "./util.js";
 
 import type { ArrayType } from "./types/array.js";
@@ -61,7 +61,7 @@ export function lazyValidate<T extends Type>(
   value: any,
   type: T,
   { validators = defaultValidators }: ValidateOptions = {}
-): Generator<ValidationError, ValueOf<T>> {
+): Generator<ValidationError, Infer<T>> {
 
   function* visit(value: any, path: PropertyPath, type: Type) {
     const validator = validators[type.kind];
@@ -78,7 +78,7 @@ export function validate<T extends Type>(
   value: any,
   type: T,
   opts: ValidateOptions = {}
-): [ValidationError[], ValueOf<T>] {
+): [ValidationError[], Infer<T>] {
   const errors = [];
   const iter = lazyValidate(value, type, opts);
   for (;;) {

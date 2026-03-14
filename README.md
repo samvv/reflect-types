@@ -18,7 +18,7 @@ Why would I want to use this?
 
 **Define an object type and validate some data with it**
 ```ts
-import { type ValueOf, types as t, validate } from "reflect-types"
+import { type Infer, types as t, validate } from "reflect-types"
 
 const personT = t.object({
     id: t.uuid4(),
@@ -27,7 +27,7 @@ const personT = t.object({
     dateOfBirth: t.date(),
 });
 
-type Person = ValueOf<typeof personT>;
+type Person = Infer<typeof personT>;
 
 const person1: Person = {
     id: '22ba434a-c662-4cc9-8a05-5cf1c7c90fd7',
@@ -96,7 +96,7 @@ Most examples in this section require the following import to be present:
 import { types as t } from "reflect-types";
 ```
 
-### `ValueOf<T>`
+### `Infer<T>`
 
 Infer the value of a certain reflected type.
 
@@ -106,14 +106,14 @@ level.
 **Example:**
 
 ```ts
-import { type ValueOf, types as t } from "reflect-types";
+import { type Infer, types as t } from "reflect-types";
 
 const objT = t.object({
     foo: t.number(),
     bar: t.string(),
 });
 
-type Obj = ValueOf<typeof objT>;
+type Obj = Infer<typeof objT>;
 
 const fo = {
     foo: 1,
@@ -150,21 +150,21 @@ Represents a TypeScript literal type.
 **Examples:**
 
 ```ts
-import { type ValueOf, types as t } from "reflect-types";
+import { type Infer, types as t } from "reflect-types";
 
 const trueT = t.literal(true);
 const foobarT = t.literal("foobar");
 const theAnswerT = t.literal(42);
 
-const x1: ValueOf<typeof trueT> = true; // ok
+const x1: Infer<typeof trueT> = true; // ok
 // @ts-expect-error
-const x2: ValueOf<typeof trueT> = false; // type error
-const x3: ValueOf<typeof foobarT> = "foobar"; // ok
+const x2: Infer<typeof trueT> = false; // type error
+const x3: Infer<typeof foobarT> = "foobar"; // ok
 // @ts-expect-error
-const x4: ValueOf<typeof foobarT> = "blablabla"; // type error
-const x5: ValueOf<typeof theAnswerT> = 42; // ok
+const x4: Infer<typeof foobarT> = "blablabla"; // type error
+const x5: Infer<typeof theAnswerT> = 42; // ok
 // @ts-expect-error
-const x6: ValueOf<typeof theAnswerT> = 3; // type error
+const x6: Infer<typeof theAnswerT> = 3; // type error
 ```
 
 ### `t.date()`
@@ -262,14 +262,14 @@ Note that due to a limitation in TypeScript you need to add `as const` to the
 parameter type array, like so:
 
 ```ts
-import { type ValueOf, types as t } from "reflect-types";
+import { type Infer, types as t } from "reflect-types";
 
 const stringLengthSig = t.callable(
     [ t.string() ] as const,
     t.number()
 );
 
-const getLength: ValueOf<typeof stringLengthSig> = x => x.length;
+const getLength: Infer<typeof stringLengthSig> = x => x.length;
 ```
 
 ## Guides

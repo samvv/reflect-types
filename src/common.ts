@@ -4,16 +4,16 @@ export interface TypeBase {
   readonly kind: string;
 }
 
-export type ValueOf<T extends TypeBase> = T['__type'];
+export type Infer<T extends TypeBase> = T['__type'];
 
 /**
  * Adds logic to a type so that the type can require all values be exactly equal to a given value.
  */
 export class Equatable<Self extends TypeBase> {
 
-  equalTo?: ValueOf<Self>;
+  equalTo?: Infer<Self>;
 
-  withValue(value: ValueOf<Self>): void {
+  withValue(value: Infer<Self>): void {
     this.equalTo = value;
   }
 }
@@ -23,9 +23,9 @@ export class Equatable<Self extends TypeBase> {
  */
 export class Defaultable<Self extends TypeBase> {
 
-  defaultTo?: ValueOf<Self>;
+  defaultTo?: Infer<Self>;
 
-  withDefault(value: ValueOf<Self>): this {
+  withDefault(value: Infer<Self>): this {
     this.defaultTo = value;
     return this;
   }
@@ -57,15 +57,15 @@ export class Sequenced<Self extends TypeBase> {
 
 export class Ordered<Self extends TypeBase> {
 
-  min?: ValueOf<Self>;
-  max?: ValueOf<Self>;
+  min?: Infer<Self>;
+  max?: Infer<Self>;
 
-  withMin(min: ValueOf<Self>): this {
+  withMin(min: Infer<Self>): this {
     this.min = min;
     return this;
   }
 
-  withMax(max: ValueOf<Self>): this {
+  withMax(max: Infer<Self>): this {
     this.max = max;
     return this;
   }

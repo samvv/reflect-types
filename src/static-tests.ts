@@ -1,5 +1,5 @@
 
-import { types, type ValueOf, type UUID, type UUID4 } from "./index.js"
+import { types, type Infer, type UUID, type UUID4 } from "./index.js"
 
 type Equal<T, U> =
   (<G>() => G extends T ? 1 : 2) extends 
@@ -15,7 +15,7 @@ function assertFalse<T extends false>() {}
 
 const boolT = types.boolean();
 
-assertTrue<Equal<ValueOf<typeof boolT>, boolean>>();
+assertTrue<Equal<Infer<typeof boolT>, boolean>>();
 
 // END TEST INFER BOOLEAN
 
@@ -24,7 +24,7 @@ assertTrue<Equal<ValueOf<typeof boolT>, boolean>>();
 
 const nullT = types.null_();
 
-assertTrue<Equal<ValueOf<typeof nullT>, null>>();
+assertTrue<Equal<Infer<typeof nullT>, null>>();
 
 // END TEST INFER NULL
 
@@ -33,7 +33,7 @@ assertTrue<Equal<ValueOf<typeof nullT>, null>>();
 
 const stringT = types.string();
 
-assertTrue<Equal<ValueOf<typeof stringT>, string>>();
+assertTrue<Equal<Infer<typeof stringT>, string>>();
 
 // END TEST INFER STRING
 
@@ -42,7 +42,7 @@ assertTrue<Equal<ValueOf<typeof stringT>, string>>();
 
 const numberT = types.number();
 
-assertTrue<Equal<ValueOf<typeof numberT>, number>>();
+assertTrue<Equal<Infer<typeof numberT>, number>>();
 
 // END TEST INFER NUMBER
 
@@ -60,7 +60,7 @@ const fooT = types.object({
   bal: types.date(),
 });
 
-assertTrue<Equal<ValueOf<typeof fooT>, { bar: { left: number, right: string[] }[], bax: string, bal: Date }>>();
+assertTrue<Equal<Infer<typeof fooT>, { bar: { left: number, right: string[] }[], bax: string, bal: Date }>>();
 
 const personT = types.object({
   id: types.uuid4(),
@@ -69,7 +69,7 @@ const personT = types.object({
   dateOfBirth: types.date(),
 });
 
-assertTrue<Equal<ValueOf<typeof personT>, { id: UUID4, fullName: string, email: string, dateOfBirth: Date }>>();
+assertTrue<Equal<Infer<typeof personT>, { id: UUID4, fullName: string, email: string, dateOfBirth: Date }>>();
 
 // END TEST INFER OBJECT
 
@@ -81,7 +81,7 @@ const x = types.tuple([
   types.string(),
 ]);
 
-assertTrue<Equal<ValueOf<typeof x>, [number, string]>>();
+assertTrue<Equal<Infer<typeof x>, [number, string]>>();
 
 // END TEST INFER TUPLE
 
@@ -93,7 +93,7 @@ const callableT = types.callable(
   types.boolean(),
 );
 
-assertTrue<Equal<ValueOf<typeof callableT>, (_a: number, _b: string) => boolean>>();
+assertTrue<Equal<Infer<typeof callableT>, (_a: number, _b: string) => boolean>>();
 
 // END TEST CALLABLE
 
@@ -114,7 +114,7 @@ assertFalse<Assignable<'0b1ee088c12a-42da-9bd0-04f2a6870de8', UUID>>();
 
 const uuid4T = types.uuid4();
 
-assertTrue<Equal<ValueOf<typeof uuid4T>, UUID4>>();
+assertTrue<Equal<Infer<typeof uuid4T>, UUID4>>();
 
 // END TEST UUID
 

@@ -1,4 +1,4 @@
-import type { TypeBase, Type, ValueOf } from "../common.js";
+import type { TypeBase, Type, Infer } from "../common.js";
 
 export class CallableType<
   Ps extends ReadonlyArray<TypeBase> = ReadonlyArray<TypeBase>,
@@ -7,7 +7,7 @@ export class CallableType<
 
   readonly kind = 'callable';
 
-  __type!: (...args: { [I in keyof Ps]: ValueOf<Ps[I]> }) => ValueOf<R>;
+  __type!: (...args: { [I in keyof Ps]: Infer<Ps[I]> }) => Infer<R>;
 
   constructor(
     public paramTypes: Ps,
