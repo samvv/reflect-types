@@ -21,7 +21,7 @@ Why would I want to use this?
 import { types } from "reflect-types"
 import { validate } from "reflect-type/lib/validators.js"
 
-const personType = types.object({
+const personT = types.object({
     id: types.uuid4(),
     fullName: types.string(),
     email: types.email(),
@@ -35,7 +35,7 @@ const person1 = {
     dateOfBirth: new Date('8/23/1997'),
 }
 
-const [errors, result] = validate(person1, personType);
+const [errors, result] = validate(person1, personT);
 
 if (errors.length > 0) {
     for (const error of errors) {
@@ -44,33 +44,34 @@ if (errors.length > 0) {
     return;
 }
 
-// Yay! Now, `result` may e.g. be stored in the database.
+// No errors, yay! Now, `result` may be stored in the database.
 ```
 
 **Make generic functions truly generic with type information**
 ```ts
-import { Type } from "reflect-types"
+import { type ValueOf, type Type, types as t } from "reflect-types"
 
-function buildEquality(t: Type): boolean {
-    switch (t.kind) {
+function equal<T extends Type>(a: ValueOf<T>, b: ValueOf<T>, ty: T): boolean {
+    switch (ty.kind) {
         case 'string':
-            return (a,b) => a === b;
+            return a === b;
         case 'vec2':
-            return (a,b) => a[0] === b[0] && a[1] === b[1];
+            return a[0] === b[0] && a[1] === b[1];
         // and so on ...
     }
 }
+
+equal("foo", "bar", t.string()); // false
 ```
 
-**Build genneric algorithms using these functions**
+**Build generic algorithms using these functions**
 
 ```ts
-import { Type, ValueOf } from "reflect-types"
+import { type Type, type ValueOf, types as t } from "reflect-types"
 
-function getValue<K extends Type, V>(data: Array<[K,V]>, key: ValueOf<T>, keyType: K): V | undefined {
-    const equal = buildEquality(keyType);
+function assoc<K extends Type, V>(data: Array<[K,V]>, key: ValueOf<T>, keyType: K): V | undefined {
     for (const [otherKey, otherValue] of data) {
-        if (equal(key, otherKey)) {
+        if (equal(key, otherKey, keyType)) {
             return otherValue;
         }
     }
@@ -83,9 +84,7 @@ const data = [
     [6, 'six'],
 ];
 
-const elementType = types.vec2();
-
-assoc(data, 1, elementType); // returns 'one'
+assoc(data, 3, t.number()); // returns 'three'
 ```
 
 **Inspect a type in order to infer whether it is nullable**
