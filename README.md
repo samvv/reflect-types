@@ -18,14 +18,13 @@ Why would I want to use this?
 
 **Define an object type and validate some data with it**
 ```ts
-import { types } from "reflect-types"
-import { validate } from "reflect-type/lib/validators.js"
+import { types as t, validate } from "reflect-types"
 
-const personT = types.object({
-    id: types.uuid4(),
-    fullName: types.string(),
-    email: types.email(),
-    dateOfBirth: types.date(),
+const personT = t.object({
+    id: t.uuid4(),
+    fullName: t.string(),
+    email: t.email(),
+    dateOfBirth: t.date(),
 });
 
 const person1 = {
@@ -41,57 +40,17 @@ if (errors.length > 0) {
     for (const error of errors) {
         console.log(error);
     }
-    return;
+} else {
+    // No errors, yay! Now, `result` may be stored in the database.
 }
-
-// No errors, yay! Now, `result` may be stored in the database.
-```
-
-**Make generic functions truly generic with type information**
-```ts
-import { type ValueOf, type Type, types as t } from "reflect-types"
-
-function equal<T extends Type>(a: ValueOf<T>, b: ValueOf<T>, ty: T): boolean {
-    switch (ty.kind) {
-        case 'string':
-            return a === b;
-        case 'array':
-            return a.length === b.length
-                && a.every((el, i) => equal(el, b[i], ty.elementType));
-        // and so on ...
-    }
-}
-
-equal("foo", "bar", t.string()); // false
-```
-
-**Build generic algorithms using these functions**
-
-```ts
-import { type Type, type ValueOf, types as t } from "reflect-types"
-
-function assoc<K extends Type, V>(data: Array<[K,V]>, key: ValueOf<T>, keyType: K): V | undefined {
-    for (const [otherKey, otherValue] of data) {
-        if (equal(key, otherKey, keyType)) {
-            return otherValue;
-        }
-    }
-}
-
-const data = [
-    [1, 'one'],
-    [5, 'five'],
-    [3, 'three'],
-    [6, 'six'],
-];
-
-assoc(data, 3, t.number()); // returns 'three'
 ```
 
 **Inspect a type in order to infer whether it is nullable**
 
+This is where this library really shines.
+
 ```ts
-import { Type, types } from "reflect-types"
+import { type Type } from "reflect-types"
 
 function isNullable(type: Type): boolean {
     switch (type.kind) {
@@ -100,26 +59,23 @@ function isNullable(type: Type): boolean {
         case 'null':
             return true;
         case 'union':
-            return type.types.some(isNullable);
-        case 'optional':
-            return isNullable(type.type);
-        case 'object':
-        case 'array':
-        case 'string':
-        case 'boolean':
-        case 'number':
-            return false;
+            return (type.types as Type[]).some(isNullable);
         default:
-            assertNever(type);
+            return false;
     }
+}
+
+// @ts-expect-error
+function fetchSomeTypeSomehow(): Type {
+    // TODO
 }
 
 const type = fetchSomeTypeSomehow();
 
 console.log(
   isNullable(type)
-    ? `The type is nullable.`
-    : `The type is not nullable.`);
+    ? `The computed type is nullable.`
+    : `The computed type is not nullable.`);
 ```
 
 ## Installation
@@ -132,10 +88,10 @@ npm install reflect-types
 
 ## API Reference
 
-This examples in this section require the following import to be present:
+Most examples in this section require the following import to be present:
 
 ```ts
-import { types as t } from "refect-types";
+import { types as t } from "reflect-types";
 ```
 
 ### `ValueOf<T>`
@@ -148,7 +104,7 @@ level.
 **Example:**
 
 ```ts
-import { ValueOf, types as t } from "reflect-types";
+import { type ValueOf, types as t } from "reflect-types";
 
 const objT = t.object({
     foo: t.number(),
@@ -192,14 +148,21 @@ Represents a TypeScript literal type.
 **Examples:**
 
 ```ts
-import { ValueOf, types as t } from "reflect-types";
+import { type ValueOf, types as t } from "reflect-types";
 
-const x1: ValueOf<typeof t.literal(true)> = true; // ok
-const x2: ValueOf<typeof t.literal(true)> = false; // type error
-const x3: ValueOf<typeof t.literal("foobar")> = "foobar"; // ok
-const x4: ValueOf<typeof t.literal("foobar")> = "blablabla"; // type error
-const x5: ValueOf<typeof t.literal(42)> = 42; // ok
-const x6: ValueOf<typeof t.literal(42)> = 3; // type error
+const trueT = t.literal(true);
+const foobarT = t.literal("foobar");
+const theAnswerT = t.literal(42);
+
+const x1: ValueOf<typeof trueT> = true; // ok
+// @ts-expect-error
+const x2: ValueOf<typeof trueT> = false; // type error
+const x3: ValueOf<typeof foobarT> = "foobar"; // ok
+// @ts-expect-error
+const x4: ValueOf<typeof foobarT> = "blablabla"; // type error
+const x5: ValueOf<typeof theAnswerT> = 42; // ok
+// @ts-expect-error
+const x6: ValueOf<typeof theAnswerT> = 3; // type error
 ```
 
 ### `t.date()`
@@ -236,7 +199,7 @@ const personsT = t.array(t.object({
     fullName: t.string(),
     dateOfBirth: t.date(),
     email: t.email(),
-});
+}));
 ```
 
 ### `t.object(objLiteral)`
@@ -269,7 +232,7 @@ import { types as t } from "reflect-types";
 
 const productT = t.object({
     title: t.string(),
-    description: t.optonal(t.string()),
+    description: t.optional(t.string()),
     price: t.boolean(),
 });
 ```
@@ -297,7 +260,7 @@ Note that due to a limitation in TypeScript you need to add `as const` to the
 parameter type array, like so:
 
 ```ts
-import { types as t } from "reflect-types";
+import { type ValueOf, types as t } from "reflect-types";
 
 const stringLengthSig = t.callable(
     [ t.string() ] as const,
@@ -316,7 +279,7 @@ The type system is flexible enough to be extended with user-defined types.
 Here is a code snippet that create a new type for RGB-colors.
 
 ```ts
-import { TypeBase } from "reflect-types"
+import { type TypeBase } from "reflect-types"
 
 type RGB = [r: number, g: number, b: number];
 
