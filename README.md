@@ -55,8 +55,9 @@ function equal<T extends Type>(a: ValueOf<T>, b: ValueOf<T>, ty: T): boolean {
     switch (ty.kind) {
         case 'string':
             return a === b;
-        case 'vec2':
-            return a[0] === b[0] && a[1] === b[1];
+        case 'array':
+            return a.length === b.length
+                && a.every((el, i) => equal(el, b[i], ty.elementType));
         // and so on ...
     }
 }
