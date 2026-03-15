@@ -24,4 +24,5 @@ export {
   vec2,
   vec3,
   vec4,
+  void_,
 } from "./types/index.js"

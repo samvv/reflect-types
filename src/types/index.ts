@@ -15,4 +15,4 @@ export * from "./union.js"
 export * from "./undefined.js"
 export * from "./unknown.js"
 export * from "./uuid.js"
-
+export * from "./void.js"
