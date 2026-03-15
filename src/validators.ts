@@ -9,6 +9,7 @@ import type { LiteralType } from "./types/literal.js";
 import type { NullType } from "./types/null.js";
 import { type NumberType, NumberCategory } from "./types/number.js";
 import type { ObjectType, OptionalType } from "./types/object.js";
+import type { RecordType } from "./types/record.js";
 import type { StringType } from "./types/string.js";
 import type { TupleType } from "./types/tuple.js";
 import type { UUID4Type } from "./types/uuid.js";
@@ -322,12 +323,27 @@ export function* validateUUID(value: any, path: PropertyPath, type: UUID4Type, r
   return value.toLowerCase();
 }
 
+export function* validateRecord(value: any, path: PropertyPath, type: RecordType, recurse: RecurseFn) {
+  if (!isPlainObject(value)) {
+    yield new ValidationError(path, `value must be an object`);
+    return;
+  }
+  const newObj = {} as Record<any, any>;
+  for (const [fieldKey, fieldVal] of Object.entries(value)) {
+    const newKey = yield* recurse(fieldKey, [ ...path, fieldKey ], type.keyType as Type);
+    const newValue = yield* recurse(fieldVal, [ ...path, fieldVal ], type.valueType as Type);
+    newObj[newKey] = newValue;
+  }
+  return newObj;
+}
+
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
 registerValidator('literal', validateLiteral);
 registerValidator('null', validateNull);
 registerValidator('number', validateNumber);
 registerValidator('object', validateObject);
+registerValidator('record', validateRecord);
 registerValidator('string', validateString);
 registerValidator('tuple', validateTuple);
 registerValidator('undefined', validateUndefined);
