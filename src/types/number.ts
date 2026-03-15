@@ -14,12 +14,14 @@ export class NumberType implements TypeBase {
 
   category?: NumberCategory;
 
-  asFloat(): void {
+  asFloat(): this {
     this.category = NumberCategory.Float;
+    return this;
   }
 
-  asInteger(): void {
+  asInteger(): this {
     this.category = NumberCategory.Integer;
+    return this;
   }
 
 }
