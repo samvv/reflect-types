@@ -25,6 +25,50 @@ test('correctly validates a string type', t => {
   t.false(isValid([ 1, 2, 3 ], scheme));
 });
 
+test('correctly validates a number type', t => {
+  const scheme = types.number();
+  t.true(isValid(1, scheme));
+  t.true(isValid(2, scheme));
+  t.true(isValid(3, scheme));
+  t.true(isValid(42, scheme));
+  t.true(isValid(123456, scheme));
+  t.true(isValid(0.1, scheme));
+  t.true(isValid(0.12345, scheme));
+  t.true(isValid(98776.54321, scheme));
+  t.true(isValid(-1, scheme));
+  t.true(isValid(-27, scheme));
+  t.false(isValid("foo", scheme));
+  t.false(isValid("", scheme));
+  t.false(isValid("1", scheme));
+  t.false(isValid("2", scheme));
+  t.false(isValid("12345", scheme));
+  t.false(isValid(false, scheme));
+  t.false(isValid(true, scheme));
+  t.false(isValid([ 1, 2, 3 ], scheme));
+});
+
+test('can only accept integral numbers', t => {
+  const scheme = types.number().asInteger();
+  t.true(isValid(1, scheme));
+  t.true(isValid(2, scheme));
+  t.true(isValid(3, scheme));
+  t.true(isValid(42, scheme));
+  t.true(isValid(123456, scheme));
+  t.true(isValid(-1, scheme));
+  t.true(isValid(-27, scheme));
+  t.false(isValid(0.1, scheme));
+  t.false(isValid(0.12345, scheme));
+  t.false(isValid(98776.54321, scheme));
+  t.false(isValid("foo", scheme));
+  t.false(isValid("", scheme));
+  t.false(isValid("1", scheme));
+  t.false(isValid("2", scheme));
+  t.false(isValid("12345", scheme));
+  t.false(isValid(false, scheme));
+  t.false(isValid(true, scheme));
+  t.false(isValid([ 1, 2, 3 ], scheme));
+});
+
 test('validate works on some nested structure', t => {
 
   const fooT = types.object({
