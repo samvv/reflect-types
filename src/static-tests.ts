@@ -86,7 +86,7 @@ assertTrue<Equal<Infer<typeof x>, [number, string]>>();
 // END TEST INFER TUPLE
 
 
-// BEGIN TEST CALLABLE
+// BEGIN TEST INFER CALLABLE
 
 const callableT = types.callable(
   [ types.number(), types.string() ] as const,
@@ -95,7 +95,7 @@ const callableT = types.callable(
 
 assertTrue<Equal<Infer<typeof callableT>, (_a: number, _b: string) => boolean>>();
 
-// END TEST CALLABLE
+// END TEST INFER CALLABLE
 
 
 // BEGIN TEST UUID
@@ -118,3 +118,12 @@ assertTrue<Equal<Infer<typeof uuid4T>, UUID4>>();
 
 // END TEST UUID
 
+
+// BEGIN TEST INFER RECORD
+
+const fooOrBarT = types.union([ types.literal('foo'), types.literal('bar') ]);
+const recordT = types.record(fooOrBarT, types.boolean());
+
+assertTrue<Equal<Infer<typeof recordT>, Record<'foo' | 'bar', boolean>>>();
+
+// END TEST INFER RECORD

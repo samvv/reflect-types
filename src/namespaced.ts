@@ -12,6 +12,7 @@ export {
   object,
   optional,
   promise,
+  record,
   string,
   tuple,
   undefined,
