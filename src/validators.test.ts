@@ -69,6 +69,18 @@ test('can only accept integral numbers', t => {
   t.false(isValid([ 1, 2, 3 ], scheme));
 });
 
+test('can validate a record', t => {
+  const fooOrBarT = types.union([ types.literal('foo'), types.literal('bar') ]);
+  const recordT = types.record(fooOrBarT, types.boolean());
+  t.true(isValid({ 'foo': true, 'bar': false }, recordT));
+  t.true(isValid({ 'bar': false }, recordT));
+  t.true(isValid({ 'foo': true }, recordT));
+  t.true(isValid({}, recordT));
+  t.false(isValid({ 'bax': true }, recordT));
+  t.false(isValid({ 'foo': 1 }, recordT));
+  t.false(isValid({ 'bar': 1 }, recordT));
+});
+
 test('validate works on some nested structure', t => {
 
   const fooT = types.object({
