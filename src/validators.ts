@@ -314,7 +314,7 @@ export function* validateUnknown(value: any, path: PropertyPath, type: UnknownTy
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export function* validateUUID4(value: any, path: PropertyPath, type: UUID4Type, recurse: RecurseFn) {
+export function* validateUUID(value: any, path: PropertyPath, type: UUID4Type, recurse: RecurseFn) {
   if (!UUID_REGEX.test(value)) {
     yield new ValidationError(path, `invalid pattern for UUID 4`);
     return;
@@ -333,4 +333,4 @@ registerValidator('tuple', validateTuple);
 registerValidator('undefined', validateUndefined);
 registerValidator('union', validateUnion);
 registerValidator('unknown', validateUnknown);
-registerValidator('uuid4', validateUUID4);
+registerValidator('uuid4', validateUUID);
