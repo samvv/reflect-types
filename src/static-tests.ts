@@ -1,5 +1,5 @@
 
-import { types, type Infer, type UUID, type UUID4 } from "./index.js"
+import { types as t, type Infer, type UUID, type UUID4 } from "./index.js"
 
 type Equal<T, U> =
   (<G>() => G extends T ? 1 : 2) extends 
@@ -15,7 +15,7 @@ function assertFalse<T extends false>() {}
 
 // BEGIN TEST INFER BOOLEAN
 
-const boolT = types.boolean();
+const boolT = t.boolean();
 
 assertTrue<Equal<Infer<typeof boolT>, boolean>>();
 
@@ -24,7 +24,7 @@ assertTrue<Equal<Infer<typeof boolT>, boolean>>();
 
 // BEGIN TEST INFER NULL
 
-const nullT = types.null_();
+const nullT = t.null_();
 
 assertTrue<Equal<Infer<typeof nullT>, null>>();
 
@@ -33,7 +33,7 @@ assertTrue<Equal<Infer<typeof nullT>, null>>();
 
 // BEGIN TEST INFER STRING
 
-const stringT = types.string();
+const stringT = t.string();
 
 assertTrue<Equal<Infer<typeof stringT>, string>>();
 
@@ -42,7 +42,7 @@ assertTrue<Equal<Infer<typeof stringT>, string>>();
 
 // BEGIN TEST INFER NUMBER
 
-const numberT = types.number();
+const numberT = t.number();
 
 assertTrue<Equal<Infer<typeof numberT>, number>>();
 
@@ -51,25 +51,25 @@ assertTrue<Equal<Infer<typeof numberT>, number>>();
 
 // BEGIN TEST INFER OBJECT
 
-const fooT = types.object({
-  bax: types.string(),
-  bar: types.array(types.object({
-    left: types.number(),
-    right: types.array(
-      types.string(),
+const fooT = t.object({
+  bax: t.string(),
+  bar: t.array(t.object({
+    left: t.number(),
+    right: t.array(
+      t.string(),
     ),
   })),
-  bal: types.date(),
+  bal: t.date(),
 });
 
 // We use Similar instead of Equal because the inferred type is too complex
 assertTrue<Similar<Infer<typeof fooT>, { bar: { left: number, right: string[] }[], bax: string, bal: Date }>>();
 
-const personT = types.object({
-  id: types.uuid4(),
-  fullName: types.string(),
-  email: types.email(),
-  dateOfBirth: types.date(),
+const personT = t.object({
+  id: t.uuid4(),
+  fullName: t.string(),
+  email: t.email(),
+  dateOfBirth: t.date(),
 });
 
 // We use Similar instead of Equal because the inferred type is too complex
@@ -80,9 +80,9 @@ assertTrue<Similar<Infer<typeof personT>, { id: UUID4, fullName: string, email: 
 
 // BEGIN TEST INFER TUPLE
 
-const x = types.tuple([
-  types.number(),
-  types.string(),
+const x = t.tuple([
+  t.number(),
+  t.string(),
 ]);
 
 assertTrue<Equal<Infer<typeof x>, [number, string]>>();
@@ -92,9 +92,9 @@ assertTrue<Equal<Infer<typeof x>, [number, string]>>();
 
 // BEGIN TEST INFER CALLABLE
 
-const callableT = types.callable(
-  [ types.number(), types.string() ] as const,
-  types.boolean(),
+const callableT = t.callable(
+  [ t.number(), t.string() ] as const,
+  t.boolean(),
 );
 
 assertTrue<Equal<Infer<typeof callableT>, (_a: number, _b: string) => boolean>>();
@@ -116,7 +116,7 @@ assertFalse<Assignable<'0b1ee088-c12a-42da-9bd004f2a6870de8', UUID>>();
 // Missing first dash
 assertFalse<Assignable<'0b1ee088c12a-42da-9bd0-04f2a6870de8', UUID>>();
 
-const uuid4T = types.uuid4();
+const uuid4T = t.uuid4();
 
 assertTrue<Equal<Infer<typeof uuid4T>, UUID4>>();
 
@@ -125,8 +125,8 @@ assertTrue<Equal<Infer<typeof uuid4T>, UUID4>>();
 
 // BEGIN TEST INFER RECORD
 
-const fooOrBarT = types.union([ types.literal('foo'), types.literal('bar') ]);
-const recordT = types.record(fooOrBarT, types.boolean());
+const fooOrBarT = t.union([ t.literal('foo'), t.literal('bar') ]);
+const recordT = t.record(fooOrBarT, t.boolean());
 
 assertTrue<Equal<Infer<typeof recordT>, Record<'foo' | 'bar', boolean>>>();
 
@@ -135,9 +135,9 @@ assertTrue<Equal<Infer<typeof recordT>, Record<'foo' | 'bar', boolean>>>();
 
 // BEGIN TEST INFER OPTIONAL
 
-const optT = types.object({
-  req: types.string(),
-  opt: types.optional(types.number()),
+const optT = t.object({
+  req: t.string(),
+  opt: t.optional(t.number()),
 });
 
 const optInst1: Infer<typeof optT> = { req: "foo" };
