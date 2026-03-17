@@ -121,29 +121,31 @@ const fo = {
 } satisfies Obj;
 ```
 
-### `t.undefined()`
+### Primitive Types
+
+#### `t.undefined()`
 
 Represents the TypeScript `undefined` type.
 
-### `t.null_()`
+#### `t.null_()`
 
 Represents the TypeScript `null` type.
 
 Notice the trailing `_` to avoid conflict with JavaScript's built-in `null` keyword.
 
-### `t.boolean()`
+#### `t.boolean()`
 
 Represents the TypeScript `boolean` type.
 
-### `t.number()`
+#### `t.number()`
 
 Represents the TypeScript `number` type.
 
-### `t.string()`
+#### `t.string()`
 
 Represents the TypeScript `string` type.
 
-### `t.literal(value)`
+#### `t.literal(value)`
 
 Represents a TypeScript literal type.
 
@@ -167,21 +169,13 @@ const x5: Infer<typeof theAnswerT> = 42; // ok
 const x6: Infer<typeof theAnswerT> = 3; // type error
 ```
 
-### `t.date()`
+#### `t.date()`
 
 Represents a plain `Date` object in JavaScript.
 
-### `t.nullable(inner)`
+### Container Types
 
-Represents a union of the type of `inner` and a null literal type.
-
-```ts
-import { types as t } from "reflect-types";
-
-const maybeStringT = t.nullable(t.string());
-```
-
-### `t.array(elementType)`
+#### `t.array(elementType)`
 
 Represents a TypeScript `Array<T>` where `T` is the inferred type of
 `elementType`.
@@ -198,7 +192,7 @@ const personsT = t.array(t.object({
 }));
 ```
 
-### `t.object(objLiteral)`
+#### `t.object(objLiteral)`
 
 Represents an object literal at the type level, where the keys and values are
 specified in `objLiteral`.
@@ -213,7 +207,7 @@ const loginT = t.object({
 });
 ```
 
-### `t.optional(inner)`
+#### `t.optional(inner)`
 
 > [!WARNING]
 >
@@ -224,16 +218,26 @@ Marks a field of the object being defined as optional.
 `inner` is a reflected type that represents the type of the field.
 
 ```ts
-import { types as t } from "reflect-types";
+import { type Infer, types as t } from "reflect-types";
 
 const productT = t.object({
     title: t.string(),
     description: t.optional(t.string()),
-    price: t.boolean(),
+    price: t.string(),
 });
+
+type Product = Infer<typeof productT>;
+
+// Notice the 'description' field is omitted
+const beans = {
+    title: "Can of Beans",
+    price: "3.00",
+} satisfies Product;
 ```
 
-### `t.union(elementTypes)`
+### Special Types
+
+#### `t.union(elementTypes)`
 
 Represents a TypeScript union type.
 
@@ -248,7 +252,21 @@ const stringOrNumberT = t.union([
 ]);
 ```
 
-### `t.callable(params, returns)`
+### Helper Types
+
+#### `t.nullable(inner)`
+
+Represents a union of the type of `inner` and a null literal type.
+
+```ts
+import { types as t } from "reflect-types";
+
+const maybeStringT = t.nullable(t.string());
+```
+
+### Functions and Execution
+
+#### `t.callable(params, returns)`
 
 Represents a function signature.
 
@@ -265,6 +283,65 @@ const stringLengthSig = t.callable(
 
 const getLength: Infer<typeof stringLengthSig> = x => x.length;
 ```
+
+#### `t.void_()`
+
+Represents the TypeScript `void` type.
+
+The TypeScript `void` type is similar to `undefined`, but is not aways
+unifiable with it. In order to correctly declare and define functions that
+return nothing, you may need this type.
+
+#### `t.promise(awaitedType)`
+
+Represents the `Promise<T>` TypeScript type, where `T` is represented by `awaitedType`.
+
+```ts
+import { type Infer, types as t } from "reflect-types";
+
+const methodT = t.callable(
+    [ t.string() ] as const,
+    t.promise(t.void_()),
+);
+```
+
+### Type API
+
+#### `Type.kind`
+
+A unique ID for category that the given types defines.
+
+For instance, any `ArrayType` always has its `kind` set to `array`.
+
+This field can be used to automatically cast to the associated type, like so:
+
+```ts
+import { type Type } from "reflect-types";
+
+function analyse(ty: Type) {
+    if (ty.kind === 'array') {
+        // Note that we didn't need to cast to use `.elementType`
+        console.log(ty.elementType);
+    } else if (ty.kind === 'object') {
+        // Note that we didn't need to cast to use `.entries`
+        console.log(ty.entries);
+    } else {
+        // ...
+    }
+}
+```
+
+#### `Type.__type`
+
+This field holds the TypeScript type that is associated with the given
+reflection type.
+
+You generally don't access it directly. Instead, you use `Infer<T>` to
+calculate the TypeScript type for you.
+
+While it is discouraged to access this field, you need to _define_ this field
+when you want to add a reflection type. See _advanced usage_ for more
+information.
 
 ## Advanced Usage
 
