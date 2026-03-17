@@ -347,6 +347,47 @@ information.
 
 ## Advanced Usage
 
+### Fixing compile errors while inspecting reflection types
+
+Due to an open issue in TypeScript, we are currently not able to let generics
+extend from `Type`. Instead, we have to extend them from `TypeBase`.
+
+If you're just an end-user, this won't pose any problems. However, if you're
+inspecting a reflection type in your application then you might run into errors
+like these:
+
+```
+error TS2345: Argument of type 'TypeBase' is not assignable to parameter of type 'Type'.
+```
+
+The fix is (unfortunately) to add a `as Type` after accessing one of the
+members of a reflection type.
+
+```ts
+import type { Type } from "reflect-types";
+
+function analyse(ty: Type) {
+    if (ty.kind === 'array') {
+        analyse(ty.elementType as Type); // `as Type` fixes the compiler error
+    } else {
+        // ...
+    }
+}
+```
+
+You could even wrap this logic in a function:
+
+```ts
+import type { TypeBase, Type } from "reflect-types"
+
+function asType(value: TypeBase): Type {
+    return value as Type;
+}
+```
+
+With this function you only need to update one location should we ever be
+forced to make changes to how this quirk is handled.
+
 ### Extending the type system
 
 The type system is flexible enough to be extended with user-defined types.
