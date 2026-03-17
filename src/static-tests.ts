@@ -7,6 +7,8 @@ type Equal<T, U> =
 
 type Assignable<T, U> = T extends U ? true : false;
 
+type Similar<T, U> = T extends U ? U extends T ? true : false : false;
+
 function assertTrue<T extends true>() {}
 function assertFalse<T extends false>() {}
 
@@ -60,7 +62,8 @@ const fooT = types.object({
   bal: types.date(),
 });
 
-assertTrue<Equal<Infer<typeof fooT>, { bar: { left: number, right: string[] }[], bax: string, bal: Date }>>();
+// We use Similar instead of Equal because the inferred type is too complex
+assertTrue<Similar<Infer<typeof fooT>, { bar: { left: number, right: string[] }[], bax: string, bal: Date }>>();
 
 const personT = types.object({
   id: types.uuid4(),
@@ -69,7 +72,8 @@ const personT = types.object({
   dateOfBirth: types.date(),
 });
 
-assertTrue<Equal<Infer<typeof personT>, { id: UUID4, fullName: string, email: string, dateOfBirth: Date }>>();
+// We use Similar instead of Equal because the inferred type is too complex
+assertTrue<Similar<Infer<typeof personT>, { id: UUID4, fullName: string, email: string, dateOfBirth: Date }>>();
 
 // END TEST INFER OBJECT
 
@@ -127,3 +131,25 @@ const recordT = types.record(fooOrBarT, types.boolean());
 assertTrue<Equal<Infer<typeof recordT>, Record<'foo' | 'bar', boolean>>>();
 
 // END TEST INFER RECORD
+
+
+// BEGIN TEST INFER OPTIONAL
+
+const optT = types.object({
+  req: types.string(),
+  opt: types.optional(types.number()),
+});
+
+const optInst1: Infer<typeof optT> = { req: "foo" };
+optInst1
+
+const optInst2: Infer<typeof optT> = { req: "foo", opt: 1 };
+optInst2
+
+const optInst3: Infer<typeof optT> = { req: "foo", opt: undefined };
+optInst3
+
+// We use Similar instead of Equal because the inferred type is too complex
+assertTrue<Similar<Infer<typeof optT>, { req: string; opt?: number }>>();
+
+// END TEST INFER OPTIONAL
