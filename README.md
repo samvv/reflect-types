@@ -169,13 +169,7 @@ const x6: Infer<typeof theAnswerT> = 3; // type error
 
 ### `t.date()`
 
-> [!WARNING]
->
-> This constructor is experimental and might change in the future.
-
-Represents a plain date with year, month, day components.
-
-This is not to be confused with a JavaScript date object.
+Represents a plain `Date` object in JavaScript.
 
 ### `t.nullable(inner)`
 
