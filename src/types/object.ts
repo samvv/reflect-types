@@ -5,7 +5,7 @@ export class OptionalType<T extends TypeBase = TypeBase> implements TypeBase {
 
   readonly kind = 'optional';
 
-  /** @ignore */ __type: T['__type'] | undefined;
+  /** @ignore */ __type!: T['__type'] | undefined;
 
   constructor(
     public type: T
@@ -29,7 +29,8 @@ export class ObjectType<T extends Record<string, TypeBase> = Record<string, Type
 
   readonly kind = 'object';
 
-  __type!: { [K in keyof T]: T[K]['__type'] };
+  __type!: { [K in keyof T as T[K] extends OptionalType<any> ? never : K]: T[K]['__type'] }
+         & { [K in keyof T as T[K] extends OptionalType<any> ? K : never]?: T[K]['__type'] };
 
   constructor(
     public entries: T,
