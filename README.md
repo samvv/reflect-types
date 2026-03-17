@@ -18,7 +18,7 @@ Why would I want to use this?
 
 **Define an object type and validate some data with it**
 ```ts
-import { type Infer, types as t, validate } from "reflect-types"
+import t, { type Infer, validate } from "reflect-types"
 
 const personT = t.object({
     id: t.uuid4(),
@@ -93,7 +93,7 @@ npm install reflect-types
 Most examples in this section require the following import to be present:
 
 ```ts
-import { types as t } from "reflect-types";
+import t from "reflect-types";
 ```
 
 ### `Infer<T>`
@@ -106,7 +106,7 @@ level.
 **Example:**
 
 ```ts
-import { type Infer, types as t } from "reflect-types";
+import t, { type Infer } from "reflect-types";
 
 const objT = t.object({
     foo: t.number(),
@@ -152,7 +152,7 @@ Represents a TypeScript literal type.
 **Examples:**
 
 ```ts
-import { type Infer, types as t } from "reflect-types";
+import t, { type Infer } from "reflect-types";
 
 const trueT = t.literal(true);
 const foobarT = t.literal("foobar");
@@ -181,7 +181,7 @@ Represents a TypeScript `Array<T>` where `T` is the inferred type of
 `elementType`.
 
 ```ts
-import { types as t } from "reflect-types";
+import t from "reflect-types";
 
 const numbersT = t.array(t.number());
 
@@ -198,7 +198,7 @@ Represents an object literal at the type level, where the keys and values are
 specified in `objLiteral`.
 
 ```ts
-import { types as t } from "reflect-types";
+import t from "reflect-types";
 
 const loginT = t.object({
     username: t.string(),
@@ -218,7 +218,7 @@ Marks a field of the object being defined as optional.
 `inner` is a reflected type that represents the type of the field.
 
 ```ts
-import { type Infer, types as t } from "reflect-types";
+import t, { type Infer } from "reflect-types";
 
 const productT = t.object({
     title: t.string(),
@@ -244,7 +244,7 @@ Represents a TypeScript union type.
 `elementTypes` must be an array of reflected types, like so:
 
 ```ts
-import { types as t } from "reflect-types";
+import t from "reflect-types";
 
 const stringOrNumberT = t.union([
     t.string(),
@@ -259,7 +259,7 @@ const stringOrNumberT = t.union([
 Represents a union of the type of `inner` and a null literal type.
 
 ```ts
-import { types as t } from "reflect-types";
+import t from "reflect-types";
 
 const maybeStringT = t.nullable(t.string());
 ```
@@ -274,7 +274,7 @@ Note that due to a limitation in TypeScript you need to add `as const` to the
 parameter type array, like so:
 
 ```ts
-import { type Infer, types as t } from "reflect-types";
+import t, { type Infer } from "reflect-types";
 
 const stringLengthSig = t.callable(
     [ t.string() ] as const,
@@ -299,7 +299,7 @@ return nothing, you may need this type.
 Represents the `Promise<T>` TypeScript type, where `T` is represented by `awaitedType`.
 
 ```ts
-import { type Infer, types as t } from "reflect-types";
+import t, { type Infer } from "reflect-types";
 
 const methodT = t.callable(
     [ t.string() ] as const,
@@ -318,7 +318,7 @@ For instance, any `ArrayType` always has its `kind` set to `array`.
 This field can be used to automatically cast to the associated type, like so:
 
 ```ts
-import { type Type } from "reflect-types";
+import type { Type } from "reflect-types";
 
 function analyse(ty: Type) {
     if (ty.kind === 'array') {
@@ -354,7 +354,7 @@ The type system is flexible enough to be extended with user-defined types.
 Here is a code snippet that create a new type for RGB-colors.
 
 ```ts
-import { type TypeBase } from "reflect-types"
+import type { TypeBase } from "reflect-types"
 
 type RGB = [r: number, g: number, b: number];
 
@@ -389,7 +389,7 @@ Next, we create the actual class that will represent these values in
 The fields `kind` and `__type` indicate the tag and the TypeScript type,
 respectively. Next, the `declare module`-directive ensures that when a user
 specifies our new type somewhere, it is actually accepted by e.g.
-`types.object()`.
+`t.object()`.
 
 Finally, we create a simple constructor for our type, making the class
 transparent and avoiding the use of `new`.

@@ -40,6 +40,6 @@ export type {
   UnknownType,
 } from "./types/index.js"
 
-import * as types from "./namespaced.js";
+import * as namespaced from "./namespaced.js";
 
-export { types };
+export default namespaced;

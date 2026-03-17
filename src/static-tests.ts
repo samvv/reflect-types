@@ -1,5 +1,5 @@
 
-import { types as t, type Infer, type UUID, type UUID4 } from "./index.js"
+import t, { type Infer, type UUID, type UUID4 } from "./index.js"
 
 type Equal<T, U> =
   (<G>() => G extends T ? 1 : 2) extends 
