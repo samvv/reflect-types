@@ -311,7 +311,7 @@ const methodT = t.callable(
 
 #### `Type.kind`
 
-A unique ID for the category that the given types defines.
+A unique ID for the category that the given type defines.
 
 For instance, any `ArrayType` always has its `kind` set to `array`.
 
