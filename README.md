@@ -288,6 +288,8 @@ const getLength: Infer<typeof stringLengthSig> = x => x.length;
 
 Represents the TypeScript `void` type.
 
+Notice the trailing `_` to avoid conflict with JavaScript's built-in `void` keyword.
+
 The TypeScript `void` type is similar to `undefined`, but is not aways
 unifiable with it. In order to correctly declare and define functions that
 return nothing, you may need this type.
@@ -309,7 +311,7 @@ const methodT = t.callable(
 
 #### `Type.kind`
 
-A unique ID for category that the given types defines.
+A unique ID for the category that the given types defines.
 
 For instance, any `ArrayType` always has its `kind` set to `array`.
 
