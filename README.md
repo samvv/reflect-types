@@ -235,6 +235,12 @@ const beans = {
 
 ### Special Types
 
+#### `t.any()`
+
+Resents the TypeScript `any` type.
+
+This type accepts any value given to it.
+
 #### `t.union(elementTypes)`
 
 Represents a TypeScript union type.
