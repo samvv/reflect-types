@@ -7,7 +7,7 @@ export {
   date,
   email,
   literal,
-  null_,
+  null_ as null,
   nullable,
   number,
   object,
@@ -25,5 +25,5 @@ export {
   vec2,
   vec3,
   vec4,
-  void_,
+  void_ as void,
 } from "./types/index.js"

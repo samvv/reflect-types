@@ -127,11 +127,9 @@ const fo = {
 
 Represents the TypeScript `undefined` type.
 
-#### `t.null_()`
+#### `t.null()`
 
 Represents the TypeScript `null` type.
-
-Notice the trailing `_` to avoid conflict with JavaScript's built-in `null` keyword.
 
 #### `t.boolean()`
 
@@ -284,11 +282,9 @@ const stringLengthSig = t.callable(
 const getLength: Infer<typeof stringLengthSig> = x => x.length;
 ```
 
-#### `t.void_()`
+#### `t.void()`
 
 Represents the TypeScript `void` type.
-
-Notice the trailing `_` to avoid conflict with JavaScript's built-in `void` keyword.
 
 The TypeScript `void` type is similar to `undefined`, but is not aways
 unifiable with it. In order to correctly declare and define functions that
@@ -303,7 +299,7 @@ import t, { type Infer } from "reflect-types";
 
 const methodT = t.callable(
     [ t.string() ] as const,
-    t.promise(t.void_()),
+    t.promise(t.void()),
 );
 ```
 

@@ -24,7 +24,7 @@ assertTrue<Equal<Infer<typeof boolT>, boolean>>();
 
 // BEGIN TEST INFER NULL
 
-const nullT = t.null_();
+const nullT = t.null();
 
 assertTrue<Equal<Infer<typeof nullT>, null>>();
 
