@@ -1,4 +1,5 @@
 export {
+  any,
   array,
   boolean,
   callable,
