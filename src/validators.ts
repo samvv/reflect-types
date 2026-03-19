@@ -1,5 +1,5 @@
 import { PropertyPath, Type, TypeTag, Infer } from "./common.js";
-import { hasOwnProperty, isPlainObject } from "./util.js";
+import { hasOwnProperty, isPlainObject, isPromise } from "./util.js";
 
 import type { ArrayType } from "./types/array.js";
 import type { BooleanType } from "./types/boolean.js";
@@ -9,6 +9,7 @@ import type { LiteralType } from "./types/literal.js";
 import type { NullType } from "./types/null.js";
 import { type NumberType, NumberCategory } from "./types/number.js";
 import type { ObjectType, OptionalType } from "./types/object.js";
+import type { PromiseType } from "./types/promise.js";
 import type { RecordType } from "./types/record.js";
 import type { StringType } from "./types/string.js";
 import type { TupleType } from "./types/tuple.js";
@@ -337,12 +338,22 @@ export function* validateRecord(value: any, path: PropertyPath, type: RecordType
   return newObj;
 }
 
+export function* validatePromise(value: any, path: PropertyPath, type: PromiseType, recurse: RecurseFn) {
+  if (!isPromise(value)) {
+    yield new ValidationError(path, `value must be a promise`)
+    return;
+  }
+  // We don't check the result of the promise. That is up to the end-user.
+  return value;
+}
+
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
 registerValidator('literal', validateLiteral);
 registerValidator('null', validateNull);
 registerValidator('number', validateNumber);
 registerValidator('object', validateObject);
+registerValidator('promise', validatePromise);
 registerValidator('record', validateRecord);
 registerValidator('string', validateString);
 registerValidator('tuple', validateTuple);
