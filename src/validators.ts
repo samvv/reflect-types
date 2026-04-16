@@ -18,6 +18,7 @@ import type { UUID4Type } from "./types/uuid.js";
 import type { UndefinedType } from "./types/undefined.js";
 import type { UnionType } from "./types/union.js";
 import type { UnknownType } from "./types/unknown.js";
+import { VoidType } from "./types/void.js";
 
 export class ValidationError extends Error {
 
@@ -352,6 +353,10 @@ export function* validateAny(value: any, path: PropertyPath, type: AnyType, recu
   return value;
 }
 
+export function* validateVoid(value: any, path: PropertyPath, type: VoidType, recurse: RecurseFn) {
+  return undefined;
+}
+
 registerValidator('any', validateAny);
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
@@ -367,3 +372,4 @@ registerValidator('undefined', validateUndefined);
 registerValidator('union', validateUnion);
 registerValidator('unknown', validateUnknown);
 registerValidator('uuid4', validateUUID);
+registerValidator('void', validateVoid);
