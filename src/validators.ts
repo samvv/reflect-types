@@ -1,6 +1,7 @@
 import { PropertyPath, Type, TypeTag, Infer } from "./common.js";
 import { hasOwnProperty, isPlainObject, isPromise } from "./util.js";
 
+import type { AnyType } from "./types/any.js";
 import type { ArrayType } from "./types/array.js";
 import type { BooleanType } from "./types/boolean.js";
 import type { CoercionType } from "./types/coercion.js";
@@ -347,6 +348,11 @@ export function* validatePromise(value: any, path: PropertyPath, type: PromiseTy
   return value;
 }
 
+export function* validateAny(value: any, path: PropertyPath, type: AnyType, recurse: RecurseFn) {
+  return value;
+}
+
+registerValidator('any', validateAny);
 registerValidator('array', validateArray);
 registerValidator('boolean', validateBoolean);
 registerValidator('literal', validateLiteral);
