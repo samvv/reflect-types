@@ -153,3 +153,16 @@ optInst3
 assertTrue<Similar<Infer<typeof optT>, { req: string; opt?: number }>>();
 
 // END TEST INFER OPTIONAL
+
+
+// BEGIN TEST PARTIAL
+
+const parT = t.partial(t.object({
+  foo: t.string(),
+  bar: t.optional(t.number()),
+  baz: t.undefined(),
+}));
+
+assertTrue<Equal<Infer<typeof parT>, { foo?: string; bar?: number; baz?: undefined }>>();
+
+// END TEST OPTIONAL

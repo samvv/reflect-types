@@ -12,6 +12,7 @@ export {
   number,
   object,
   optional,
+  partial,
   promise,
   record,
   string,
